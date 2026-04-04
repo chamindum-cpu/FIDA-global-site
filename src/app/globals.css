@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════
+   FIDA Global — Green · Grey · Blue Color System
+   ═══════════════════════════════════════════════════ */
+:root {
+  /* ── Backgrounds ─────────────────────────── */
+  --bg-base:       #0b1120;   /* deep navy-black  */
+  --bg-surface:    #111827;   /* card / section   */
+  --bg-elevated:   #1a2438;   /* raised elements  */
+
+  /* ── Text ────────────────────────────────── */
+  --text-primary:  #f8fafc;   /* Slate 50  */
+  --text-secondary:#94a3b8;   /* Slate 400 */
+  --text-muted:    #64748b;   /* Slate 500 */
+
+  /* ── Brand colours ───────────────────────── */
+  --green:         #76c442;   /* lime green       */
+  --green-dark:    #508c20;   /* deep green       */
+  --green-glow:    rgba(118,196,66,.15);
+
+  --blue:          #38a3f5;   /* sky blue         */
+  --blue-dark:     #1a6fc4;   /* deep blue        */
+  --blue-glow:     rgba(56,163,245,.12);
+
+  --grey:          #8ba0b8;   /* cool grey        */
+  --grey-light:    #c5d3e0;   /* light grey text  */
+  --grey-dark:     #2d3f52;   /* border / divider */
+
+  /* ── Aliases (keep old variables working) ── */
+  --background:    var(--bg-base);
+  --foreground:    var(--text-primary);
+  --primary:       var(--green);
+  --primary-foreground: #ffffff;
+  --secondary:     var(--bg-surface);
+  --secondary-foreground: var(--text-primary);
+  --accent:        var(--bg-elevated);
+  --muted:         var(--text-muted);
+  --border:        var(--grey-dark);
+
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+html { color-scheme: dark; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Glass card ───────────────────────────────────── */
+.glass {
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(139, 160, 184, 0.10);
+}
+
+/* ── Transition ───────────────────────────────────── */
+.transition-smooth {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Gradient presets ─────────────────────────────── */
+.gradient-green {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+}
+.gradient-blue {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+}
+.gradient-grey {
+  background: linear-gradient(135deg, var(--grey) 0%, var(--grey-dark) 100%);
+}
+.gradient-hero {
+  background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+}
+
+/* ── Text gradients ───────────────────────────────── */
+.text-gradient-green {
+  background: linear-gradient(135deg, var(--green), #b5f045);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--blue), #8dd5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient {
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow utilities ───────────────────────────────── */
+.glow-green { box-shadow: 0 0 40px var(--green-glow); }
+.glow-blue  { box-shadow: 0 0 40px var(--blue-glow); }
+
+/* ── Section backgrounds ──────────────────────────── */
+.section-alt {
+  background: var(--bg-surface);
+}
+.section-elevated {
+  background: var(--bg-elevated);
+}
+
+/* ── Marquee ──────────────────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--grey-dark); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(139, 160, 184, 0.1); }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+/* ── Selection ────────────────────────────────────── */
+::selection { background: rgba(118,196,66,.2); color: var(--text-primary); }
+
+/* ── Cursor hidden globally for custom cursor ─────── */
+a, button, [data-cursor] { cursor: none; }
+
+/* ── Page section spacing ─────────────────────────── */
+.section-pad { padding: 7rem 0; }
+
+/* ── Badge variants ───────────────────────────────── */
+.badge-green {
+  background: rgba(118,196,66,.12);
+  color: var(--green);
+  border: 1px solid rgba(118,196,66,.25);
+}
+.badge-blue {
+  background: rgba(56,163,245,.12);
+  color: var(--blue);
+  border: 1px solid rgba(56,163,245,.25);
+}
+.badge-grey {
+  background: rgba(139,160,184,.10);
+  color: var(--grey-light);
+  border: 1px solid rgba(139,160,184,.20);
+}
+
+/* ── Grain Overlay ────────────────────────────────── */
+.grain::before {
+  content: "";
+  position: fixed;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 9999;
+  animation: grain 8s steps(10) infinite;
+}
+
+@keyframes grain {
+  0%, 100% { transform:translate(0, 0); }
+  10% { transform:translate(-5%, -10%); }
+  20% { transform:translate(-15%, 5%); }
+  30% { transform:translate(7%, -25%); }
+  40% { transform:translate(-5%, 25%); }
+  50% { transform:translate(-15%, 10%); }
+  60% { transform:translate(15%, 0); }
+  70% { transform:translate(0, 15%); }
+  80% { transform:translate(3%, 35%); }
+  90% { transform:translate(-10%, 10%); }
+}
+
+/* ── Rotating Seal ────────────────────────────────── */
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-rotate-slow {
+  animation: rotate-slow 12s linear infinite;
+}
+
+/* ── Refined section transitions ──────────────────── */
+.section-transition {
+  transition: background-color 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Card border hover states ─────────────────────── */
+.card-hover-green:hover { border-color: rgba(118,196,66,.35); background: rgba(118,196,66,.03); }
+.card-hover-blue:hover  { border-color: rgba(56,163,245,.30); background: rgba(56,163,245,.03); }
+.card-hover-grey:hover  { border-color: rgba(139,160,184,.25); background: rgba(139,160,184,.03); }
+
