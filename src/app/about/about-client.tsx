@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Users, Globe, Award, Lightbulb, Shield, Zap } from "lucide-react";
 import { AnimatedCounter } from "@/components/animated-counter";
+import TeamShowcase from "@/components/team-showcase";
 
 const values = [
   { icon: Lightbulb, color: "var(--green)", title: "Innovation First", desc: "We relentlessly pursue new ideas and technology to keep our clients ahead of the curve." },
@@ -140,39 +141,19 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-28 container mx-auto px-6">
+      {/* Team — Lusion-style full-screen showcase */}
+      <section className="py-20">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 space-y-4"
+          className="text-center mb-12 space-y-4"
         >
           <span className="badge-grey px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest">Leadership</span>
           <h2 className="text-4xl font-bold" style={{ color: "var(--text-primary)" }}>The Team Behind the Vision</h2>
         </motion.div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {team.map((member, i) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.5, ease: "easeOut" }}
-              className="glass rounded-3xl p-8 text-center group hover:-translate-y-2 transition-smooth card-hover-blue"
-            >
-              <div
-                className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-2xl font-black text-white mb-5 shadow-lg"
-                style={{ background: `linear-gradient(135deg, ${member.color}, ${member.color}99)` }}
-              >
-                {member.initials}
-              </div>
-              <h3 className="font-bold text-lg" style={{ color: "var(--text-primary)" }}>{member.name}</h3>
-              <p className="text-sm mt-1" style={{ color: "var(--text-muted)" }}>{member.role}</p>
-            </motion.div>
-          ))}
-        </div>
+        <TeamShowcase />
       </section>
     </>
   );

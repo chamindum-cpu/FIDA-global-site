@@ -269,12 +269,6 @@ export default function Hero() {
                       className="inline-block text-primary italic relative"
                     >
                       {letter}
-                      <motion.span
-                        initial={{ left: "-10%" }}
-                        animate={{ left: "110%" }}
-                        transition={{ duration: 1.5, delay: 1.5, repeat: Infinity, repeatDelay: 4 }}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-full skew-x-12 pointer-events-none"
-                      />
                     </motion.span>
                   ))}
                 </span>

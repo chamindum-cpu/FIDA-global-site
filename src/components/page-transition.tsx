@@ -1,24 +1,60 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import PageLoader from "./page-loader";
+
+const SMOOTH = [0.16, 1, 0.3, 1] as const;
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const prevPathname = useRef<string>(pathname);
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayedPathname, setDisplayedPathname] = useState(pathname);
+
+  useEffect(() => {
+    // Only trigger on actual page changes (not the first paint)
+    if (pathname === prevPathname.current) return;
+
+    prevPathname.current = pathname;
+
+    // 1. Show loader
+    setIsLoading(true);
+
+    // 2. After the loader's enter anim (~700ms), swap the page
+    const swapTimer = setTimeout(() => {
+      setDisplayedPathname(pathname);
+    }, 650);
+
+    // 3. After page is swapped + a brief pause, hide loader
+    const hideTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1050);
+
+    return () => {
+      clearTimeout(swapTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [pathname]);
 
   return (
-    <motion.div
-      key={pathname}
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.8, 
-        ease: [0.16, 1, 0.3, 1], 
-        delay: 0.1 
-      }}
-      className="flex-1 flex flex-col"
-    >
-      {children}
-    </motion.div>
+    <>
+      {/* Full-screen cinematic loader overlay */}
+      <PageLoader isLoading={isLoading} />
+
+      {/* Page content — keyed to displayedPathname so it only remounts after swap */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={displayedPathname}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: SMOOTH, delay: 0.05 }}
+          className="flex-1 flex flex-col"
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+    </>
   );
 }

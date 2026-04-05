@@ -7,9 +7,9 @@
    ═══════════════════════════════════════════════════ */
 :root {
   /* ── Backgrounds ─────────────────────────── */
-  --bg-base:       #0b1120;   /* deep navy-black  */
-  --bg-surface:    #111827;   /* card / section   */
-  --bg-elevated:   #1a2438;   /* raised elements  */
+  --bg-base:       #141e30;   /* deep navy-black  */
+  --bg-surface:    #1b2740;   /* card / section   */
+  --bg-elevated:   #253450;   /* raised elements  */
 
   /* ── Text ────────────────────────────────── */
   --text-primary:  #f8fafc;   /* Slate 50  */

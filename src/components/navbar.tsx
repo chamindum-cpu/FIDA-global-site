@@ -46,16 +46,34 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Minimal trigger (On top bar) */}
-          <button
-            onClick={() => setMenuOpen(true)}
-            className="flex items-center gap-4 group"
-          >
-            <span className="hidden md:block text-sm font-bold uppercase tracking-widest text-[#a8b8d0] group-hover:text-primary transition-colors">Menu</span>
-            <div className="w-12 h-12 glass rounded-full border border-white/10 flex items-center justify-center text-white group-hover:border-primary/40 transition-smooth group-hover:scale-110">
-              <Menu className="w-6 h-6" />
+          <div className="flex items-center gap-8">
+            {/* ── Desktop Links pulled "out" ── */}
+            <div className="hidden lg:flex items-center gap-12 mr-8">
+              <Link 
+                href="/" 
+                className="text-[10px] font-black uppercase tracking-[0.4em] text-[#a8b8d0] hover:text-primary transition-all hover:scale-105"
+              >
+                Home
+              </Link>
+              <Link 
+                href="/about" 
+                className="text-[10px] font-black uppercase tracking-[0.4em] text-[#a8b8d0] hover:text-primary transition-all hover:scale-105"
+              >
+                About Us
+              </Link>
             </div>
-          </button>
+
+            {/* Minimal trigger (On top bar) */}
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center gap-4 group"
+            >
+              <span className="hidden md:block text-sm font-bold uppercase tracking-widest text-[#a8b8d0] group-hover:text-primary transition-colors">Menu</span>
+              <div className="w-12 h-12 glass rounded-full border border-white/10 flex items-center justify-center text-white group-hover:border-primary/40 transition-smooth group-hover:scale-110">
+                <Menu className="w-6 h-6" />
+              </div>
+            </button>
+          </div>
         </div>
       </nav>
 
