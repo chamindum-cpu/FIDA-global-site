@@ -1,66 +1,16 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Server, Shield, Cloud, Terminal, Cpu, Users, Zap } from "lucide-react";
+import { 
+  Server, Shield, Cloud, Terminal, Cpu, Users, Zap, 
+  Database, Code, Award, Loader2, Search
+} from "lucide-react";
 
-const cards = [
-  {
-    number: "01",
-    title: "ICT Infrastructure",
-    desc: "Server management, virtualization, datacenter setup, and smart office automation.",
-    icon: Server,
-    color: "from-blue-500/20 to-blue-500/5",
-    border: "hover:border-blue-500/40",
-  },
-  {
-    number: "02",
-    title: "Managed IT Services",
-    desc: "24/7 proactive IT support, maintenance, and monitoring for maximum performance.",
-    icon: Cloud,
-    color: "from-cyan-500/20 to-cyan-500/5",
-    border: "hover:border-cyan-500/40",
-  },
-  {
-    number: "03",
-    title: "ICT Consultancy",
-    desc: "Strategic planning and implementation for large-scale enterprise IT transformation.",
-    icon: Terminal,
-    color: "from-primary/20 to-primary/5",
-    border: "hover:border-primary/40",
-  },
-  {
-    number: "04",
-    title: "Software Development",
-    desc: "Specialized Web and Mobile applications using the latest modern tech stacks.",
-    icon: Zap,
-    color: "from-purple-500/20 to-purple-500/5",
-    border: "hover:border-purple-500/40",
-  },
-  {
-    number: "05",
-    title: "Security Systems",
-    desc: "Integrated CCTV and advanced security solutions protecting your physical assets.",
-    icon: Shield,
-    color: "from-orange-500/20 to-orange-500/5",
-    border: "hover:border-orange-500/40",
-  },
-  {
-    number: "06",
-    title: "IoT & Automation",
-    desc: "Custom industrial automation and R&D for next-generation connected systems.",
-    icon: Cpu,
-    color: "from-green-500/20 to-green-500/5",
-    border: "hover:border-green-500/40",
-  },
-  {
-    number: "07",
-    title: "Manpower Outsourcing",
-    desc: "Providing highly skilled IT professionals for short or long-term enterprise goals.",
-    icon: Users,
-    color: "from-secondary/20 to-secondary/5",
-    border: "hover:border-secondary/40",
-  },
-];
+// Helper to map icon names from DB to components
+const IconMap: { [key: string]: any } = {
+  Server, Shield, Cloud, Terminal, Cpu, Users, Zap, Database, Code, Award
+};
 
 const containerVariants = {
   hidden: {},
@@ -78,6 +28,44 @@ const cardVariants = {
 };
 
 export default function ExpertiseSection() {
+  const [expertise, setExpertise] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchExpertise() {
+      try {
+        const res = await fetch("/api/expertise");
+        const data = await res.json();
+        // Filter published and map colors/numbers
+        const published = data.filter((ex: any) => ex.status === 'Published').map((ex: any, idx: number) => ({
+          ...ex,
+          number: (idx + 1).toString().padStart(2, '0'),
+          // Generate a varied but harmonious color set
+          color: idx % 2 === 0 ? "from-blue-500/20 to-blue-500/5" : "from-primary/20 to-primary/5",
+          border: idx % 2 === 0 ? "hover:border-blue-500/40" : "hover:border-primary/40",
+        }));
+        setExpertise(published);
+      } catch (err) {
+        console.error("Error fetching expertise:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchExpertise();
+  }, []);
+
+  if (loading) {
+    return (
+       <div className="py-20 flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
+          <Loader2 className="animate-spin" size={40} />
+          <p className="text-sm font-medium tracking-widest uppercase">Initializing Core Capabilities...</p>
+       </div>
+    );
+  }
+
+  // If no expertise yet, don't show the section or show a minimal version
+  if (expertise.length === 0) return null;
+
   return (
     <section className="py-32 relative" id="solutions">
       <div className="container mx-auto px-6">
@@ -111,8 +99,8 @@ export default function ExpertiseSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {cards.map((card) => {
-            const Icon = card.icon;
+          {expertise.map((card) => {
+            const Icon = IconMap[card.icon] || Server;
             return (
               <motion.div
                 key={card.number}
@@ -139,7 +127,7 @@ export default function ExpertiseSection() {
                   <h3 className="text-2xl font-bold text-secondary dark:text-white">
                     {card.title}
                   </h3>
-                  <p className="text-muted leading-relaxed">{card.desc}</p>
+                  <p className="text-muted leading-relaxed">{card.description}</p>
                 </div>
 
                 <div className="relative z-10 pt-4 flex items-center gap-2 text-primary font-bold text-sm tracking-widest uppercase">

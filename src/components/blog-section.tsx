@@ -1,77 +1,9 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowUpRight, Calendar, Clock } from "lucide-react";
-
-const posts = [
-  {
-    id: 1,
-    category: "Infrastructure",
-    title: "How Modern Data Centers Are Redefining Enterprise Scalability",
-    excerpt:
-      "As businesses grow, the backbone of their IT infrastructure must evolve. We explore how hyper-converged systems and edge computing are reshaping data center architecture.",
-    date: "Mar 28, 2026",
-    readTime: "5 min read",
-    tag: "Deep Dive",
-    gradient: "from-primary/20 to-transparent",
-  },
-  {
-    id: 2,
-    category: "Cybersecurity",
-    title: "Zero-Trust Architecture: Building Security from the Inside Out",
-    excerpt:
-      "Perimeter-based security is no longer enough. Learn why leading enterprises are adopting zero-trust principles and how FIDA implements them in real-world deployments.",
-    date: "Mar 18, 2026",
-    readTime: "7 min read",
-    tag: "Featured",
-    gradient: "from-blue-500/20 to-transparent",
-  },
-  {
-    id: 3,
-    category: "Digital Transformation",
-    title: "AI-Driven HR: How Smart Systems Are Transforming Workforce Management",
-    excerpt:
-      "From automated payroll to predictive retention analytics, AI is revolutionizing human resources. Discover how FIDA's HR platform puts this power in your hands.",
-    date: "Mar 10, 2026",
-    readTime: "6 min read",
-    tag: "Trending",
-    gradient: "from-purple-500/20 to-transparent",
-  },
-  {
-    id: 4,
-    category: "Cloud Solutions",
-    title: "Hybrid Cloud Strategies That Actually Work for Mid-Sized Businesses",
-    excerpt:
-      "Not every company needs a full cloud migration. We break down the hybrid strategies that deliver the best ROI while keeping data sovereignty intact.",
-    date: "Feb 28, 2026",
-    readTime: "4 min read",
-    tag: "Practical Guide",
-    gradient: "from-orange-500/20 to-transparent",
-  },
-  {
-    id: 5,
-    category: "Networking",
-    title: "SD-WAN vs MPLS: Making the Right Choice for Your Enterprise Network",
-    excerpt:
-      "The network landscape has dramatically shifted. This comprehensive comparison helps IT leaders evaluate which WAN technology aligns with their operational goals.",
-    date: "Feb 14, 2026",
-    readTime: "8 min read",
-    tag: "Technical",
-    gradient: "from-cyan-500/20 to-transparent",
-  },
-  {
-    id: 6,
-    category: "Managed Services",
-    title: "The ROI of Outsourcing IT: A Data-Driven Analysis",
-    excerpt:
-      "We analyzed 200+ client case studies to quantify the true return on investment of managed IT services — the numbers will surprise you.",
-    date: "Feb 5, 2026",
-    readTime: "5 min read",
-    tag: "Case Study",
-    gradient: "from-green-500/20 to-transparent",
-  },
-];
+import { ArrowUpRight, Calendar, Clock, Loader2 } from "lucide-react";
 
 const containerVariants = {
   hidden: {},
@@ -89,7 +21,49 @@ const cardVariants = {
   },
 };
 
+const gradients = [
+  "from-primary/20 to-transparent",
+  "from-blue-500/20 to-transparent",
+  "from-purple-500/20 to-transparent",
+  "from-orange-500/20 to-transparent",
+  "from-cyan-500/20 to-transparent",
+  "from-green-500/20 to-transparent",
+];
+
 export default function BlogSection() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        const res = await fetch("/api/blogs");
+        const data = await res.json();
+        // Take the latest 6 published posts
+        setPosts(data.slice(0, 7)); 
+      } catch (err) {
+        console.error("Failed to fetch homepage blogs:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBlogs();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-20 flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
+        <Loader2 className="animate-spin text-primary" size={40} />
+        <p className="text-sm font-medium tracking-widest uppercase">Opening Knowledge Base...</p>
+      </div>
+    );
+  }
+
+  if (posts.length === 0) return null;
+
+  const featured = posts[0];
+  const gridPosts = posts.slice(1);
+
   return (
     <section className="py-32 relative" id="blog">
       <div className="container mx-auto px-6">
@@ -122,52 +96,60 @@ export default function BlogSection() {
         </motion.div>
 
         {/* Featured post (large) */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8"
-        >
-          <Link href={`/blog/${posts[0].id}`} className="block group">
-            <div className="relative overflow-hidden rounded-[2.5rem] glass border border-transparent hover:border-primary/30 p-12 lg:p-16 transition-smooth hover:shadow-2xl">
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${posts[0].gradient} opacity-60 group-hover:opacity-100 transition-opacity`}
-              />
-              <div className="relative z-10 grid lg:grid-cols-2 gap-10 items-center">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
-                      {posts[0].category}
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-widest text-white bg-primary px-3 py-1 rounded-full">
-                      {posts[0].tag}
-                    </span>
+        {featured && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8"
+          >
+            <Link href={`/blog/${featured.id}`} className="block group">
+              <div className="relative overflow-hidden rounded-[2.5rem] glass border border-transparent hover:border-primary/30 p-12 lg:p-16 transition-smooth hover:shadow-2xl">
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${gradients[0]} opacity-60 group-hover:opacity-100 transition-opacity`}
+                />
+                <div className="relative z-10 grid lg:grid-cols-2 gap-10 items-center">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
+                        {featured.category_name || featured.cat}
+                      </span>
+                      {featured.status === 'Published' && (
+                        <span className="text-xs font-bold uppercase tracking-widest text-white bg-primary px-3 py-1 rounded-full">
+                          NEW
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-2xl lg:text-4xl font-bold text-secondary dark:text-white leading-tight group-hover:text-primary transition-colors">
+                      {featured.title}
+                    </h3>
+                    <p className="text-muted leading-relaxed text-lg line-clamp-2">
+                      {featured.excerpt}
+                    </p>
+                    <div className="flex items-center gap-5 text-sm text-muted">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4" /> {new Date(featured.date).toLocaleDateString()}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" /> 5 min read
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-2xl lg:text-4xl font-bold text-secondary dark:text-white leading-tight group-hover:text-primary transition-colors">
-                    {posts[0].title}
-                  </h3>
-                  <p className="text-muted leading-relaxed text-lg">
-                    {posts[0].excerpt}
-                  </p>
-                  <div className="flex items-center gap-5 text-sm text-muted">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4" /> {posts[0].date}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" /> {posts[0].readTime}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <div className="w-24 h-24 rounded-full border-4 border-primary/30 flex items-center justify-center group-hover:border-primary group-hover:scale-110 transition-smooth">
-                    <ArrowUpRight className="w-10 h-10 text-primary" />
+                  <div className="flex justify-end order-first lg:order-last">
+                    <div className="relative w-full aspect-video lg:aspect-square max-w-sm rounded-[2rem] overflow-hidden border border-white/10">
+                       {featured.imageUrl ? (
+                         <img src={featured.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-smooth" />
+                       ) : (
+                         <div className="w-full h-full bg-gradient-to-br from-primary/30 to-transparent" />
+                       )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        </motion.div>
+            </Link>
+          </motion.div>
+        )}
 
         {/* Grid of posts */}
         <motion.div
@@ -177,19 +159,16 @@ export default function BlogSection() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {posts.slice(1).map((post) => (
+          {gridPosts.map((post, idx) => (
             <motion.div key={post.id} variants={cardVariants}>
               <Link href={`/blog/${post.id}`} className="block group h-full">
                 <div className="relative overflow-hidden rounded-[2rem] glass border border-transparent hover:border-primary/20 p-8 h-full flex flex-col space-y-5 transition-smooth hover:shadow-xl hover:-translate-y-1">
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br ${post.gradient} opacity-40 group-hover:opacity-70 transition-opacity`}
+                    className={`absolute inset-0 bg-gradient-to-br ${gradients[(idx + 1) % gradients.length]} opacity-40 group-hover:opacity-70 transition-opacity`}
                   />
                   <div className="relative z-10 flex items-center justify-between">
                     <span className="text-xs font-bold uppercase tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full">
-                      {post.category}
-                    </span>
-                    <span className="text-xs font-medium text-muted/70 bg-white/5 px-2 py-1 rounded-full border border-border">
-                      {post.tag}
+                      {post.category_name || post.cat}
                     </span>
                   </div>
                   <h3 className="relative z-10 text-lg font-bold text-secondary dark:text-white leading-snug group-hover:text-primary transition-colors flex-1">
@@ -201,10 +180,7 @@ export default function BlogSection() {
                   <div className="relative z-10 flex items-center justify-between pt-4 border-t border-border">
                     <div className="flex items-center gap-4 text-xs text-muted">
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5" /> {post.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5" /> {post.readTime}
+                        <Calendar className="w-3.5 h-3.5" /> {new Date(post.date).toLocaleDateString()}
                       </span>
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />

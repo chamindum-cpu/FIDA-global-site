@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 export default function CustomCursor() {
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
 
   useEffect(() => {
+    // If we're on the admin page, we don't want the custom cursor logic at all.
+    // The CSS in globals.css handles restoring the native cursor via !important.
+    if (isAdmin) return;
+
     const dot = cursorDotRef.current;
     const ring = cursorRingRef.current;
     if (!dot || !ring) return;
@@ -55,7 +62,10 @@ export default function CustomCursor() {
       document.removeEventListener("mousemove", onMouseMove);
       cancelAnimationFrame(animId);
     };
-  }, []);
+  }, [isAdmin]);
+
+  // Don't render the custom cursor elements if we're in the admin panel
+  if (isAdmin) return null;
 
   return (
     <>

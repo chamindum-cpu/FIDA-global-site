@@ -9,22 +9,26 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/mssql": "^9.1.11",
+    "bcryptjs": "^3.0.3",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",
+    "mssql": "^12.2.1",
     "next": "^14.2.35",
+    "quill": "^2.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-quill": "^2.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10",
     "@types/node": "^18",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "^14",
-
     "tailwindcss": "^3",
     "typescript": "^5"
-
   }
 }

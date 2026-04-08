@@ -52,6 +52,9 @@ body {
   overflow-x: hidden;
   cursor: none;
 }
+body:has(.admin-theme) {
+  cursor: auto !important;
+}
 
 /* ── Glass card ───────────────────────────────────── */
 .glass {
@@ -140,6 +143,8 @@ body {
 
 /* ── Cursor hidden globally for custom cursor ─────── */
 a, button, [data-cursor] { cursor: none; }
+.admin-theme, .admin-theme a, .admin-theme button, .admin-theme [data-cursor] { cursor: auto !important; }
+
 
 /* ── Page section spacing ─────────────────────────── */
 .section-pad { padding: 7rem 0; }
