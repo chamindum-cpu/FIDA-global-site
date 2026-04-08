@@ -4,6 +4,7 @@ import MarqueeTicker from "@/components/marquee";
 import StatsSection from "@/components/stats-section";
 import CompanyLogos from "@/components/company-logos";
 import ExpertiseSection from "@/components/expertise-section";
+import RobotArmHero from "@/components/robot-arm";
 import ProjectsSection from "@/components/projects-section";
 import BlogSection from "@/components/blog-section";
 import CtaSection from "@/components/cta-section";
@@ -18,6 +19,7 @@ export default function Home() {
       <StatsSection />
       <CompanyLogos />
       <ExpertiseSection />
+      <RobotArmHero />
       <ProjectsSection />
       <BlogSection />
       <CtaSection />

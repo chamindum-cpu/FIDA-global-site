@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Server, Shield, Cloud, Terminal, Cpu, Users, Zap, 
-  Database, Code, Award, Loader2, Search
+  Database, Code, Award, Loader2, Search, Building2, Layout, Briefcase, Globe
 } from "lucide-react";
 
 // Helper to map icon names from DB to components
 const IconMap: { [key: string]: any } = {
-  Server, Shield, Cloud, Terminal, Cpu, Users, Zap, Database, Code, Award
+  Server, Shield, Cloud, Terminal, Cpu, Users, Zap, Database, Code, Award,
+  Building2, Layout, Briefcase, Globe
 };
 
 const containerVariants = {
