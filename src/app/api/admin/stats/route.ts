@@ -10,6 +10,7 @@ export async function GET() {
     const projectCount = await pool.request().query("SELECT COUNT(*) as count FROM projects");
     const expertiseCount = await pool.request().query("SELECT COUNT(*) as count FROM expertise");
     const userCount = await pool.request().query("SELECT COUNT(*) as count FROM users");
+    const customerCount = await pool.request().query("SELECT COUNT(*) as count FROM customers");
 
     // Fetch recent activity (latest blogs)
     const recentBlogs = await pool.request().query("SELECT TOP 5 title, created_at, status FROM blogs ORDER BY created_at DESC");
@@ -20,6 +21,7 @@ export async function GET() {
         projects: projectCount.recordset[0].count,
         expertise: expertiseCount.recordset[0].count,
         users: userCount.recordset[0].count,
+        customers: customerCount.recordset[0].count,
       },
       recentBlogs: recentBlogs.recordset
     });

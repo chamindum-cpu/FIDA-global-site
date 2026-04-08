@@ -1,0 +1,152 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Save, Loader2, AlertCircle, Link as LinkIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function CreateCustomer() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    websiteUrl: "",
+    orderIndex: "0",
+    status: "Active",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name) {
+      setError("Customer name is required.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/customers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          orderIndex: parseInt(formData.orderIndex) || 0,
+        }),
+      });
+
+      if (response.ok) {
+        router.push("/admin/customers");
+      } else {
+        const data = await response.json();
+        setError(data.message || "Failed to add customer.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-8 pb-20">
+      <header className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link 
+            href="/admin/customers" 
+            className="p-3 rounded-2xl bg-[var(--bg-surface)] border border-[var(--grey-dark)] hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+          >
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-white">Add New Customer</h2>
+            <p className="text-[var(--text-secondary)] mt-1">Register a new global partner or client.</p>
+          </div>
+        </div>
+        <button 
+          onClick={handleSubmit}
+          disabled={loading}
+          className="flex items-center gap-2 px-8 py-3 rounded-2xl bg-gradient-to-r from-[var(--green)] to-[var(--green-dark)] text-white font-bold transition-smooth hover:scale-[1.02] shadow-lg shadow-[var(--green-glow)] disabled:opacity-50"
+        >
+          {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+          {loading ? "Saving..." : "Save Customer"}
+        </button>
+      </header>
+
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-start gap-3"
+          >
+            <AlertCircle size={18} className="shrink-0 mt-0.5" />
+            <p>{error}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass rounded-3xl p-8 space-y-6 border border-[var(--grey-dark)]">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-[var(--text-muted)] ml-1">Customer Name</label>
+              <input 
+                type="text" 
+                placeholder="Ex: Google, Apple, Sony..." 
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--grey-dark)] rounded-2xl py-4 px-6 focus:outline-none focus:border-[var(--green)] transition-smooth text-lg font-bold"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-[var(--text-muted)] ml-1 flex items-center gap-2">
+                <LinkIcon size={14} />
+                Website URL (Optional)
+              </label>
+              <input 
+                type="url" 
+                placeholder="https://example.com" 
+                className="w-full bg-[var(--bg-elevated)] border border-[var(--grey-dark)] rounded-2xl py-4 px-6 focus:outline-none focus:border-[var(--green)] transition-smooth text-sm"
+                value={formData.websiteUrl}
+                onChange={(e) => setFormData({...formData, websiteUrl: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-[var(--text-muted)] ml-1">Display Order</label>
+              <input 
+                type="number" 
+                className="w-32 bg-[var(--bg-elevated)] border border-[var(--grey-dark)] rounded-2xl py-4 px-6 focus:outline-none focus:border-[var(--green)] transition-smooth text-sm"
+                value={formData.orderIndex}
+                onChange={(e) => setFormData({...formData, orderIndex: e.target.value})}
+              />
+              <p className="text-[10px] text-[var(--text-muted)] mt-1 ml-1">Lower numbers appear first.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="glass rounded-3xl p-8 space-y-6 border border-[var(--grey-dark)]">
+            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">Status</label>
+            <div className="grid grid-cols-2 gap-2">
+                {["Inactive", "Active"].map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setFormData({...formData, status: s})}
+                    className={`py-3 rounded-xl text-xs font-bold transition-smooth ${formData.status === s ? 'bg-[var(--green-glow)] text-[var(--green)] border border-[var(--green)]/30' : 'bg-[var(--bg-elevated)] border border-transparent hover:border-[var(--grey-dark)] text-[var(--text-secondary)]'}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}

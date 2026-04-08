@@ -39,7 +39,7 @@ export default function AdminDashboard() {
     { label: "Total Blogs", value: data?.stats?.blogs || 0, icon: FileText, color: "var(--blue)", glow: "var(--blue-glow)" },
     { label: "Our Projects", value: data?.stats?.projects || 0, icon: Briefcase, color: "var(--green)", glow: "var(--green-glow)" },
     { label: "Expertise Cards", value: data?.stats?.expertise || 0, icon: Award, color: "var(--blue)", glow: "var(--blue-glow)" },
-    { label: "Team Users", value: data?.stats?.users || 0, icon: Users, color: "var(--green)", glow: "var(--green-glow)" },
+    { label: "Global Partners", value: data?.stats?.customers || 0, icon: Users, color: "var(--green)", glow: "var(--green-glow)" },
   ];
 
   return (

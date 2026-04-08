@@ -53,6 +53,7 @@ export default function AdminLayout({
           <SidebarLink href="/admin/blog" icon={<FileText size={20} />} label="Manage Blogs" active={pathname.startsWith("/admin/blog")} />
           <SidebarLink href="/admin/projects" icon={<Briefcase size={20} />} label="Manage Projects" active={pathname.startsWith("/admin/projects")} />
           <SidebarLink href="/admin/expertise" icon={<Award size={20} />} label="Our Expertise" active={pathname.startsWith("/admin/expertise")} />
+          <SidebarLink href="/admin/customers" icon={<Users size={20} />} label="Manage Customers" active={pathname.startsWith("/admin/customers")} />
           
           <div className="mt-8 mb-2 px-4">
             <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-semibold">System</p>
