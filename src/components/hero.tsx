@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useCallback } from "react";
 import { ArrowDown } from "lucide-react";
+import SeasonalDecor from "./seasonal-decor";
 
 /* ─── Animated Globe ──────────────────────────────────────── */
 function Globe() {
@@ -219,6 +220,7 @@ export default function Hero() {
       ref={sectionRef}
       className="relative min-h-[110vh] flex items-center overflow-hidden"
     >
+      <SeasonalDecor />
       {/* Ambient glow blobs */}
       <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full blur-[180px] -z-10 pointer-events-none" style={{ background: "var(--green)", opacity: 0.12 }} />
       <div className="absolute bottom-1/4 -right-1/4 w-[700px] h-[700px] rounded-full blur-[160px] -z-10 pointer-events-none" style={{ background: "var(--blue)", opacity: 0.10 }} />

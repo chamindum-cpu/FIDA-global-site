@@ -3,66 +3,44 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useCallback } from "react";
 
-/* ── Team data ──────────────────────────────────────────── */
-const TEAM = [
-  {
-    name: "Ahmed Al-Rashid",
-    role: "Chief Executive Officer",
-    tag: "CEO",
-    image: "/team-ahmed.jpg",
-    accent: "#76c442",
-    index: "01",
-  },
-  {
-    name: "Sarah Mitchell",
-    role: "Chief Technology Officer",
-    tag: "CTO",
-    image: "/team-sarah.jpg",
-    accent: "#38a3f5",
-    index: "02",
-  },
-  {
-    name: "James Okonkwo",
-    role: "VP — Infrastructure",
-    tag: "VP",
-    image: "/team-james.jpg",
-    accent: "#76c442",
-    index: "03",
-  },
-  {
-    name: "Priya Nair",
-    role: "Head of Cybersecurity",
-    tag: "CISO",
-    image: "/team-priya.jpg",
-    accent: "#38a3f5",
-    index: "04",
-  },
-  {
-    name: "Lars Eriksson",
-    role: "Director — Cloud Services",
-    tag: "DIR",
-    image: "/team-lars.jpg",
-    accent: "#8ba0b8",
-    index: "05",
-  },
-  {
-    name: "Maria Santos",
-    role: "Chief Operating Officer",
-    tag: "COO",
-    image: "/team-maria.jpg",
-    accent: "#8ba0b8",
-    index: "06",
-  },
-];
+
 
 const EXPO = [0.86, 0, 0.07, 1] as const;
 const SMOOTH = [0.16, 1, 0.3, 1] as const;
 const AUTO_INTERVAL = 4500; // ms
 
 export default function TeamShowcase() {
+  const [team, setTeam] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    async function fetchTeam() {
+      try {
+        const res = await fetch("/api/teams");
+        if (res.ok) {
+          const data = await res.json();
+          // Map API data to the component's format
+          const formatted = data.map((m: any, idx: number) => ({
+            name: m.name,
+            role: m.position,
+            tag: m.position.split(' ').pop()?.toUpperCase() || "TEAM",
+            image: m.image_url || "/team-placeholder.jpg",
+            accent: m.accent || (idx % 2 === 0 ? "#76c442" : "#38a3f5"),
+            index: (idx + 1).toString().padStart(2, '0')
+          }));
+          setTeam(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch team:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTeam();
+  }, []);
 
   const go = useCallback(
     (nextIndex: number) => {
@@ -75,15 +53,25 @@ export default function TeamShowcase() {
 
   /* Auto-advance */
   useEffect(() => {
-    if (paused) return;
+    if (paused || team.length === 0) return;
     const id = setInterval(() => {
       setDirection(1);
-      setActive((prev) => (prev + 1) % TEAM.length);
+      setActive((prev) => (prev + 1) % team.length);
     }, AUTO_INTERVAL);
     return () => clearInterval(id);
-  }, [paused]);
+  }, [paused, team.length]);
 
-  const member = TEAM[active];
+  if (loading) {
+    return (
+      <section className="h-screen bg-black flex items-center justify-center">
+        <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </section>
+    );
+  }
+
+  if (team.length === 0) return null;
+
+  const member = team[active];
 
   return (
     <section
@@ -183,7 +171,7 @@ export default function TeamShowcase() {
               letterSpacing: "0.1em",
             }}
           >
-            {member.index} / {String(TEAM.length).padStart(2, "0")}
+            {member.index} / {String(team.length).padStart(2, "0")}
           </motion.span>
         </AnimatePresence>
       </div>
@@ -299,7 +287,7 @@ export default function TeamShowcase() {
 
         {/* Navigation dots */}
         <div className="flex items-center gap-3">
-          {TEAM.map((m, i) => (
+          {team.map((m, i) => (
             <button
               key={i}
               onClick={() => go(i)}
@@ -349,7 +337,7 @@ export default function TeamShowcase() {
       >
         <button
           onClick={() =>
-            go((active - 1 + TEAM.length) % TEAM.length)
+            go((active - 1 + team.length) % team.length)
           }
           aria-label="Previous"
           className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-white/40 hover:scale-110 transition-all duration-300"
@@ -366,7 +354,7 @@ export default function TeamShowcase() {
           </svg>
         </button>
         <button
-          onClick={() => go((active + 1) % TEAM.length)}
+          onClick={() => go((active + 1) % team.length)}
           aria-label="Next"
           className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:border-white/40 hover:scale-110 transition-all duration-300"
           style={{ background: "rgba(255,255,255,0.05)" }}
@@ -388,7 +376,7 @@ export default function TeamShowcase() {
         className="absolute right-10 lg:right-16 top-1/2 -translate-y-1/2 flex flex-col gap-3"
         style={{ zIndex: 6 }}
       >
-        {TEAM.map((m, i) => (
+        {team.map((m, i) => (
           <button
             key={i}
             onClick={() => go(i)}

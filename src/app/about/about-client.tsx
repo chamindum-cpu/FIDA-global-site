@@ -142,7 +142,7 @@ export default function AboutClient() {
       </section>
 
       {/* Team — Lusion-style full-screen showcase */}
-      {/* <section className="py-20">
+      <section className="py-20">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -154,7 +154,7 @@ export default function AboutClient() {
           <h2 className="text-4xl font-bold" style={{ color: "var(--text-primary)" }}>The Team Behind the Vision</h2>
         </motion.div>
         <TeamShowcase />
-      </section> */}
+      </section>
     </>
   );
 }

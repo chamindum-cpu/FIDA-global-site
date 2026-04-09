@@ -45,6 +45,7 @@ export async function DELETE(request: Request) {
 
     const pool = await getDbConnection();
     await pool.request()
+      .input('id', sql.Int, id)
       .query(`UPDATE testimonials SET status = 'Deleted' WHERE id = @id`); // Soft delete
 
     return NextResponse.json({ message: "Testimonial deleted successfully" });
