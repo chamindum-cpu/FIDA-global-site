@@ -91,11 +91,11 @@ function Globe() {
       { lat: -1.3, lon: 36.8 },  // Nairobi
       { lat: 51.5, lon: -0.1 },  // London
       { lat: 40.7, lon: -74.0 }, // New York
-      { lat: 1.3,  lon: 103.8 }, // Singapore
+      { lat: 1.3, lon: 103.8 }, // Singapore
       { lat: 52.4, lon: 4.9 },   // Amsterdam
       { lat: 19.1, lon: 72.9 },  // Mumbai
       { lat: -6.2, lon: 35.7 },  // Dar es Salaam
-      { lat: 31.2, lon: 121.5},  // Shanghai
+      { lat: 31.2, lon: 121.5 },  // Shanghai
       { lat: 48.9, lon: 2.3 },   // Paris
     ];
 
@@ -123,7 +123,7 @@ function Globe() {
     });
 
     /* — arc connections between some nodes — */
-    const arcs = [[0,1],[0,5],[1,2],[2,3],[4,8],[5,9],[3,9],[0,6]];
+    const arcs = [[0, 1], [0, 5], [1, 2], [2, 3], [4, 8], [5, 9], [3, 9], [0, 6]];
     arcs.forEach(([a, b]) => {
       const pa = project(nodes[a].lat, nodes[a].lon);
       const pb = project(nodes[b].lat, nodes[b].lon);
@@ -212,7 +212,7 @@ export default function Hero() {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const scale   = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
 
   return (
     <section
@@ -330,9 +330,9 @@ export default function Hero() {
           >
             {[
               { label: "500+", sub: "Clients" },
-              { label: "12",   sub: "Countries" },
-              { label: "15+",  sub: "Awards" },
-              { label: "99.9%",sub: "Uptime SLA" },
+              { label: "12", sub: "Countries" },
+              { label: "15+", sub: "Awards" },
+              { label: "99.9%", sub: "Uptime SLA" },
             ].map((s) => (
               <div key={s.label} className="text-left group cursor-default">
                 <div className="text-lg font-black text-white group-hover:text-primary transition-colors">

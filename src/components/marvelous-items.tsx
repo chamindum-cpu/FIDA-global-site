@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { RobotArm } from "./robot-arm";
+import RobotArmHero from "./robot-arm";
 import { Sparkles, Zap, Cpu, ShieldCheck } from "lucide-react";
 
 const FeatureItem = ({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) => (
@@ -84,7 +84,7 @@ export default function MarvelousItems() {
               viewport={{ once: true }}
               className="w-full h-full relative"
             >
-              <RobotArm />
+              <RobotArmHero />
             </motion.div>
 
             {/* Floating Labels around the Arm */}

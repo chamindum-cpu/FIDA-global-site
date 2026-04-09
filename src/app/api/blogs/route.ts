@@ -7,9 +7,9 @@ export async function GET(request: Request) {
     const isAdmin = searchParams.get('admin') === 'true';
     const category = searchParams.get('category');
     console.log(`GET Blogs API: isAdmin=${isAdmin}, category=${category}`);
-    
+
     const pool = await getDbConnection();
-    
+
     let result;
     if (isAdmin) {
       result = await pool.request().execute('sp_GetAllBlogs');
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     const { authorId, categoryId, title, excerpt, content, imageUrl, status } = data;
 
     const pool = await getDbConnection();
-    
+
     const result = await pool.request()
       .input('AuthorId', sql.Int, authorId)
       .input('CategoryId', sql.Int, categoryId)
@@ -66,12 +66,33 @@ export async function POST(request: Request) {
       .input('Status', sql.NVarChar(20), status || 'Draft')
       .execute('sp_CreateBlogPost');
 
-    return NextResponse.json({ 
-      message: "Blog post created successfully", 
-      blogId: result.recordset[0].BlogId 
+    return NextResponse.json({
+      message: "Blog post created successfully",
+      blogId: result.recordset[0].BlogId
     });
   } catch (error: any) {
     console.error("Create Blog Error:", error);
     return NextResponse.json({ message: "Failed to create blog", error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return NextResponse.json({ message: "Blog ID is required" }, { status: 400 });
+    }
+
+    const pool = await getDbConnection();
+    await pool.request()
+      .input('BlogId', sql.Int, id)
+      .execute('sp_DeleteBlog');
+
+    return NextResponse.json({ message: "Blog deleted successfully" });
+  } catch (error: any) {
+    console.error("Delete Blog Error:", error);
+    return NextResponse.json({ message: "Failed to delete blog", error: error.message }, { status: 500 });
   }
 }

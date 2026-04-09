@@ -1,21 +1,63 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Loader2, AlertCircle, Link as LinkIcon } from "lucide-react";
+import { ArrowLeft, Save, Loader2, AlertCircle, Link as LinkIcon, Image as ImageIcon, Upload, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CreateCustomer() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     websiteUrl: "",
+    logoUrl: "",
     orderIndex: "0",
     status: "Active",
   });
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new window.Image();
+        img.src = ev.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Compress to webp for even smaller size, or png to preserve transparency
+          const dataUrl = canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/webp', 0.8);
+          setFormData(prev => ({ ...prev, logoUrl: dataUrl }));
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,6 +172,43 @@ export default function CreateCustomer() {
         </div>
 
         <div className="space-y-6">
+          <div className="glass rounded-3xl p-8 space-y-6 border border-[var(--grey-dark)]">
+            <h3 className="text-xl font-bold flex items-center gap-2">
+              <ImageIcon size={18} className="text-[var(--green)]" />
+              Customer Logo
+            </h3>
+            
+            <div className="space-y-4">
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                className="hidden" 
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className="aspect-[4/3] rounded-2xl border-2 border-dashed border-[var(--grey-dark)] flex flex-col items-center justify-center gap-2 group hover:border-[var(--green)] transition-smooth cursor-pointer bg-[var(--bg-elevated)]/30 overflow-hidden relative"
+              >
+                {formData.logoUrl ? (
+                  <>
+                    <img src={formData.logoUrl} alt="Preview" className="w-full h-full object-contain p-4 bg-white" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-smooth flex items-center justify-center">
+                      <Upload className="text-white" size={32} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-3 rounded-full bg-[var(--bg-elevated)] text-[var(--text-muted)] group-hover:text-[var(--green)] transition-smooth">
+                      <Plus size={24} />
+                    </div>
+                    <p className="text-xs font-medium text-[var(--text-muted)]">Upload Logo</p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="glass rounded-3xl p-8 space-y-6 border border-[var(--grey-dark)]">
             <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">Status</label>
             <div className="grid grid-cols-2 gap-2">

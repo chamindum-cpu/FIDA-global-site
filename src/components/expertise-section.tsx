@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { 
-  Server, Shield, Cloud, Terminal, Cpu, Users, Zap, 
+import {
+  Server, Shield, Cloud, Terminal, Cpu, Users, Zap,
   Database, Code, Award, Loader2, Search, Building2, Layout, Briefcase, Globe
 } from "lucide-react";
 
@@ -57,10 +57,10 @@ export default function ExpertiseSection() {
 
   if (loading) {
     return (
-       <div className="py-20 flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
-          <Loader2 className="animate-spin" size={40} />
-          <p className="text-sm font-medium tracking-widest uppercase">Initializing Core Capabilities...</p>
-       </div>
+      <div className="py-20 flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
+        <Loader2 className="animate-spin" size={40} />
+        <p className="text-sm font-medium tracking-widest uppercase">Initializing Core Capabilities...</p>
+      </div>
     );
   }
 

@@ -12,6 +12,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "FIDA Global | Intelligent Business Solutions",
   description: "FIDA Global provides innovative IT consultancy, infrastructure, networking, and managed services with a focus on smart business management systems.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 import PageTransition from "@/components/page-transition";

@@ -3,9 +3,11 @@ import Hero from "@/components/hero";
 import MarqueeTicker from "@/components/marquee";
 import StatsSection from "@/components/stats-section";
 import CompanyLogos from "@/components/company-logos";
+import ProductsSection from "@/components/products-section";
 import ExpertiseSection from "@/components/expertise-section";
-import RobotArmHero from "@/components/robot-arm";
+import MarvelousItems from "@/components/marvelous-items";
 import ProjectsSection from "@/components/projects-section";
+import TestimonialsSection from "@/components/testimonials-section";
 import BlogSection from "@/components/blog-section";
 import CtaSection from "@/components/cta-section";
 import Footer from "@/components/footer";
@@ -18,9 +20,11 @@ export default function Home() {
       <MarqueeTicker />
       <StatsSection />
       <CompanyLogos />
+      <ProductsSection />
       <ExpertiseSection />
-      <RobotArmHero />
+      <MarvelousItems />
       <ProjectsSection />
+      <TestimonialsSection />
       <BlogSection />
       <CtaSection />
       <Footer />

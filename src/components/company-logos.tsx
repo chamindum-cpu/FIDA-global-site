@@ -9,12 +9,6 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["700"],
 });
 
-const DEFAULT_BRANDS = [
-  "Apple", "Sony", "Porsche", "Google", "Nvidia", "Samsung", "Intel", "Microsoft",
-  "MaxMara", "Calvin Klein", "Wallpaper*", "Coca-Cola", "Hyundai", "AKQA", 
-  "Awwwards.", "The Webby Awards", "Adobe", "Meta", "Amazon", "SpaceX"
-];
-
 interface Customer {
   id: number;
   name: string;
@@ -33,31 +27,53 @@ const TickerRow = ({
   direction?: "left" | "right";
   fontClass: string;
 }) => {
+  const [isPaused, setIsPaused] = useState(false);
+
   return (
-    <div className="flex overflow-hidden py-4 select-none">
+    <div 
+      className="flex overflow-hidden py-8 select-none"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <motion.div
-        animate={{
-          x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
+        className="flex gap-20 items-center whitespace-nowrap px-8"
+        style={{
+            animation: `ticker-${direction} ${speed}s linear infinite`,
+            animationPlayState: isPaused ? 'paused' : 'running'
         }}
-        transition={{
-          duration: speed,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-        className="flex gap-16 items-center whitespace-nowrap px-8"
       >
+        <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes ticker-left {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            @keyframes ticker-right {
+                0% { transform: translateX(-50%); }
+                100% { transform: translateX(0); }
+            }
+        `}} />
+
         {[...items, ...items, ...items, ...items].map((item, i) => {
           const isCustomer = typeof item !== "string";
-          const name = isCustomer ? (item as Customer).name : (item as string);
+          const customer = isCustomer ? (item as Customer) : null;
+          const name = customer ? customer.name : (item as string);
 
-          return (
-            <div key={i} className="flex items-center justify-center">
-              <span
-                className={`${fontClass} text-3xl md:text-5xl font-bold tracking-tight uppercase grayscale opacity-30 hover:opacity-100 hover:grayscale-0 transition-all duration-500 cursor-default text-white`}
-              >
-                {name}
-              </span>
-            </div>
+           return (
+             <div key={i} className="flex items-center justify-center shrink-0 w-56 h-28 mx-8 group cursor-pointer transition-smooth">
+               {customer && customer.logo_url ? (
+                 <img 
+                   src={customer.logo_url} 
+                   alt={name} 
+                   className="max-w-[180px] max-h-[90px] object-contain transition-all duration-500 pointer-events-none group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]" 
+                 />
+               ) : (
+                 <span
+                   className={`${fontClass} text-3xl md:text-5xl font-bold tracking-tighter uppercase text-white/50 group-hover:text-white transition-all duration-500 group-hover:scale-125`}
+                 >
+                   {name}
+                 </span>
+               )}
+             </div>
           );
         })}
       </motion.div>
@@ -83,23 +99,25 @@ export default function CompanyLogos() {
     fetchCustomers();
   }, []);
 
-  // Split customers or default brands into 3 rows for the ticker
-  const displayItems = customers.length > 0 ? customers : DEFAULT_BRANDS;
-  
-  const row1 = displayItems.slice(0, Math.ceil(displayItems.length / 3));
-  const row2 = displayItems.slice(Math.ceil(displayItems.length / 3), Math.ceil(displayItems.length * 2 / 3));
-  const row3 = displayItems.slice(Math.ceil(displayItems.length * 2 / 3));
+  // Split customers into 3 rows for the ticker
+  const row1 = customers.slice(0, Math.ceil(customers.length / 3));
+  const row2 = customers.slice(Math.ceil(customers.length / 3), Math.ceil(customers.length * 2 / 3));
+  const row3 = customers.slice(Math.ceil(customers.length * 2 / 3));
 
-  // If there are too few items, duplicate them to ensure smooth ticker
-  const r1 = row1.length > 0 ? row1 : DEFAULT_BRANDS.slice(0, 8);
-  const r2 = row2.length > 0 ? row2 : DEFAULT_BRANDS.slice(8, 14);
-  const r3 = row3.length > 0 ? row3 : DEFAULT_BRANDS.slice(14);
+  const r1 = row1;
+  const r2 = row2;
+  const r3 = row3;
 
   return (
-    <section className="py-32 relative overflow-hidden bg-black">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-primary/5 blur-[120px] pointer-events-none" />
+    <section className="py-28 relative overflow-hidden bg-[#242428] border-y border-white/10">
+      {/* Intense Ambient Lighting Layers */}
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[500px] bg-white/10 blur-[150px] rounded-full pointer-events-none animate-pulse" />
+      <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-20 -right-20 w-[800px] h-[800px] bg-blue-500/15 blur-[140px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
 
-      <div className="container mx-auto px-6 mb-16 relative z-10">
+      <div className="container mx-auto px-6 mb-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -109,13 +127,13 @@ export default function CompanyLogos() {
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">
             Global Partnership
           </span>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-white uppercase">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white uppercase">
             Brands We Work With
           </h2>
         </motion.div>
       </div>
 
-      <div className="mt-10 flex flex-col gap-8 opacity-40 hover:opacity-80 transition-opacity duration-1000">
+      <div className="mt-10 flex flex-col gap-12 opacity-90 transition-opacity duration-1000">
         <TickerRow items={r1} speed={30} direction="left" fontClass={spaceGrotesk.className} />
         <TickerRow items={r2} speed={40} direction="right" fontClass={spaceGrotesk.className} />
         <TickerRow items={r3} speed={25} direction="left" fontClass={spaceGrotesk.className} />

@@ -25,8 +25,24 @@ export default function ProjectManagement() {
     fetchProjects();
   }, []);
 
-  const filteredProjects = projects.filter(p => 
-    p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this project?")) return;
+    
+    try {
+      const res = await fetch(`/api/projects?id=${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setProjects(projects.filter(p => p.id !== id));
+      } else {
+        alert("Failed to delete project");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting project");
+    }
+  };
+
+  const filteredProjects = projects.filter(p =>
+    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (p.category_name && p.category_name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -46,7 +62,7 @@ export default function ProjectManagement() {
           <h2 className="text-3xl font-bold tracking-tight">Project Portfolio</h2>
           <p className="text-[var(--text-secondary)] mt-1">Manage client success stories and project showcases.</p>
         </div>
-        <Link 
+        <Link
           href="/admin/projects/create"
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[var(--blue)] to-[var(--blue-dark)] text-white font-bold transition-smooth hover:scale-[1.02] shadow-lg shadow-[var(--blue-glow)]"
         >
@@ -58,9 +74,9 @@ export default function ProjectManagement() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--blue)] transition-smooth" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search projects..." 
+          <input
+            type="text"
+            placeholder="Search projects..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-[var(--bg-surface)] border border-[var(--grey-dark)] rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--blue)] transition-smooth text-sm"
@@ -87,7 +103,7 @@ export default function ProjectManagement() {
             <tbody className="divide-y divide-[var(--grey-dark)]">
               <AnimatePresence mode="popLayout">
                 {filteredProjects.map((p) => (
-                  <motion.tr 
+                  <motion.tr
                     key={p.id}
                     layout
                     initial={{ opacity: 0 }}
@@ -130,7 +146,10 @@ export default function ProjectManagement() {
                         <button className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]">
                           <Edit2 size={16} />
                         </button>
-                        <button className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400">
+                        <button 
+                          onClick={() => handleDelete(p.id)}
+                          className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400"
+                        >
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -140,7 +159,7 @@ export default function ProjectManagement() {
               </AnimatePresence>
             </tbody>
           </table>
-          
+
           {filteredProjects.length === 0 && (
             <div className="py-20 text-center">
               <p className="text-[var(--text-muted)]">No projects found.</p>

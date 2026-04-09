@@ -2,40 +2,40 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Search, Plus, Edit2, Trash2, ExternalLink, Filter, Loader2, Users, Image as ImageIcon } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Loader2, Lightbulb, Grid } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function CustomerManagement() {
-  const [customers, setCustomers] = useState<any[]>([]);
+export default function SolutionManagement() {
+  const [solutions, setSolutions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetchCustomers();
+    fetchSolutions();
   }, []);
 
-  async function fetchCustomers() {
+  async function fetchSolutions() {
     try {
       setLoading(true);
-      const res = await fetch("/api/customers");
+      const res = await fetch("/api/features");
       const data = await res.json();
-      setCustomers(data);
+      setSolutions(data);
     } catch (err) {
-      console.error("Failed to fetch customers:", err);
+      console.error("Failed to fetch solutions:", err);
     } finally {
       setLoading(false);
     }
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this customer?")) return;
+    if (!confirm("Are you sure you want to delete this solution?")) return;
     
     try {
-      const res = await fetch(`/api/customers?id=${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/features?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
-        setCustomers(prev => prev.filter(c => c.id !== id));
+        setSolutions(prev => prev.filter(s => s.id !== id));
       } else {
-        alert("Failed to delete customer");
+        alert("Failed to delete solution");
       }
     } catch (err) {
       console.error("Delete error:", err);
@@ -43,15 +43,15 @@ export default function CustomerManagement() {
     }
   };
 
-  const filteredCustomers = customers.filter(c => 
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSolutions = solutions.filter(s => 
+    s.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
     return (
       <div className="h-96 flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
         <Loader2 className="animate-spin" size={40} />
-        <p className="text-sm font-medium">Loading customers...</p>
+        <p className="text-sm font-medium">Loading solutions...</p>
       </div>
     );
   }
@@ -60,15 +60,15 @@ export default function CustomerManagement() {
     <div className="space-y-8">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Customer Management</h2>
-          <p className="text-[var(--text-secondary)] mt-1">Manage global partnerships and client logos.</p>
+          <h2 className="text-3xl font-bold tracking-tight">Our Solutions</h2>
+          <p className="text-[var(--text-secondary)] mt-1">Manage the premium solutions displayed on the homepage.</p>
         </div>
         <Link 
-          href="/admin/customers/create"
+          href="/admin/features/create"
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[var(--green)] to-[var(--green-dark)] text-white font-bold transition-smooth hover:scale-[1.02] shadow-lg shadow-[var(--green-glow)]"
         >
           <Plus size={20} />
-          Add New Customer
+          Add New Solution
         </Link>
       </header>
 
@@ -77,7 +77,7 @@ export default function CustomerManagement() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--green)] transition-smooth" size={18} />
           <input 
             type="text" 
-            placeholder="Search customers..." 
+            placeholder="Search solutions..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-[var(--bg-surface)] border border-[var(--grey-dark)] rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--green)] transition-smooth text-sm"
@@ -90,8 +90,8 @@ export default function CustomerManagement() {
           <table className="w-full text-left border-collapse">
             <thead className="bg-[var(--bg-elevated)]/50 border-b border-[var(--grey-dark)]">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Website</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Solution</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Icon</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Order</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">Status</th>
                 <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] text-right">Actions</th>
@@ -99,9 +99,9 @@ export default function CustomerManagement() {
             </thead>
             <tbody className="divide-y divide-[var(--grey-dark)]">
               <AnimatePresence mode="popLayout">
-                {filteredCustomers.map((c) => (
+                {filteredSolutions.map((s) => (
                   <motion.tr 
-                    key={c.id}
+                    key={s.id}
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -110,37 +110,33 @@ export default function CustomerManagement() {
                   >
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white border border-[var(--grey-dark)] text-[var(--green)] flex items-center justify-center overflow-hidden shrink-0">
-                          {c.logo_url ? <img src={c.logo_url} alt="Logo" className="w-full h-full object-contain p-1" /> : <Users size={20} className="text-[var(--text-muted)]" />}
+                        <div className="p-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--grey-dark)] text-[var(--green)]">
+                          <Lightbulb size={20} />
                         </div>
-                        <p className="font-bold text-sm group-hover:text-[var(--green)] transition-smooth">{c.name}</p>
+                        <div>
+                          <p className="font-bold text-sm group-hover:text-[var(--green)] transition-smooth">{s.title}</p>
+                          <p className="text-xs text-[var(--text-muted)] truncate max-w-[200px]">{s.description}</p>
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-5">
-                      {c.website_url ? (
-                        <a href={c.website_url} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--blue)] hover:underline flex items-center gap-1">
-                          {new URL(c.website_url).hostname}
-                          <ExternalLink size={12} />
-                        </a>
-                      ) : (
-                        <span className="text-xs text-[var(--text-muted)]">N/A</span>
-                      )}
+                      <span className="text-xs font-medium text-[var(--text-secondary)]">{s.icon_name}</span>
                     </td>
                     <td className="px-6 py-5">
-                      <p className="text-xs font-medium text-[var(--text-secondary)]">{c.order_index}</p>
+                      <p className="text-xs font-medium text-[var(--text-secondary)]">{s.order_index}</p>
                     </td>
                     <td className="px-6 py-5">
-                      <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ${c.status === 'Active' ? 'bg-[var(--green-glow)] text-[var(--green)]' : 'bg-orange-500/10 text-orange-400'}`}>
-                        {c.status}
+                      <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ${s.status === 'Active' ? 'bg-[var(--green-glow)] text-[var(--green)]' : 'bg-orange-500/10 text-orange-400'}`}>
+                        {s.status}
                       </span>
                     </td>
                     <td className="px-6 py-5 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link href={`/admin/customers/edit/${c.id}`} className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]">
+                        <Link href={`/admin/features/edit/${s.id}`} className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]">
                           <Edit2 size={16} />
                         </Link>
                         <button 
-                          onClick={() => handleDelete(c.id)}
+                          onClick={() => handleDelete(s.id)}
                           className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400"
                         >
                           <Trash2 size={16} />
@@ -153,9 +149,9 @@ export default function CustomerManagement() {
             </tbody>
           </table>
           
-          {filteredCustomers.length === 0 && (
+          {filteredSolutions.length === 0 && (
             <div className="py-20 text-center">
-              <p className="text-[var(--text-muted)]">No customers found.</p>
+              <p className="text-[var(--text-muted)]">No solutions found.</p>
             </div>
           )}
         </div>

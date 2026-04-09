@@ -3,22 +3,7 @@ import React from "react";
 
 const css = `
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap');
-.stage{background:#050508;min-height:700px;width:100%;overflow:hidden;position:relative;display:grid;grid-template-columns:1fr 1fr;font-family:'Outfit',sans-serif;padding:80px 0;}
-.left{padding:0 32px 0 48px;display:flex;flex-direction:column;justify-content:center;z-index:4;position:relative}
-.eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#64748b;display:flex;align-items:center;gap:10px;margin-bottom:28px;font-weight:600}
-.dot-live{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;animation:blink 1.2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.h1{font-family:'Outfit',sans-serif;font-size:clamp(40px,5vw,64px);font-weight:800;line-height:1.1;letter-spacing:-.04em;color:#f1f5f9;margin-bottom:24px}
-.h1 span{display:block;padding-left:48px;color:var(--blue, #38a3f5);font-weight:400;font-style:italic;}
-.desc{font-size:15px;line-height:1.8;color:#94a3b8;max-width:440px;margin-bottom:36px;font-family:'Inter',sans-serif}
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:#090f1d;border:1px solid #1a2540;border-radius:12px;padding:16px;transition:border-color .3s}
-.card:hover{border-color:#2563eb44}
-.card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.card-icon{width:28px;height:28px;border-radius:6px;border:1px solid #1e3a5f;display:flex;align-items:center;justify-content:center;color:#60a5fa;font-size:14px}
-.card h3{font-size:13px;font-weight:600;color:#e2e8f0;margin:0}
-.card p{font-size:11px;color:#334155;line-height:1.55;margin:0}
-.right{position:relative;overflow:hidden}
+.right{position:relative;overflow:hidden;width:100%;height:100%;min-height:500px;}
 .ring{position:absolute;border-radius:50%;border:1px solid;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%)}
 .r1{width:500px;height:500px;border-color:rgba(59,130,246,.07);animation:cw 28s linear infinite}
 .r2{width:580px;height:580px;border-color:rgba(255,255,255,.03);animation:ccw 38s linear infinite}
@@ -26,12 +11,7 @@ const css = `
 @keyframes cw{to{transform:translate(-50%,-50%) rotate(360deg)}}
 @keyframes ccw{to{transform:translate(-50%,-50%) rotate(-360deg)}}
 @media (max-width: 1024px) {
-  .stage { grid-template-columns: 1fr; min-height: auto; padding: 60px 0; }
-  .left { padding: 0 24px; text-align: center; align-items: center; margin-bottom: 40px; }
-  .h1 { font-size: 42px; }
-  .h1 span { padding-left: 0; }
-  .desc { margin-left: auto; margin-right: auto; }
-  .right { height: 500px; }
+  .right { height: 400px; }
   .hud-panel { right: 5%; top: 5%; }
 }
 .hud-panel{position:absolute;top:14%;right:2%;background:rgba(9,15,29,.9);border:1px solid #1a2540;border-radius:8px;padding:10px 14px;pointer-events:none;z-index:10}
@@ -84,31 +64,12 @@ const css = `
 @keyframes convMove{from{transform:translateX(0)}to{transform:translateX(-320px)}}
 `;
 
-export default function RobotArmHero() {
+export default function RobotArmHero({ status = "idle", project }: any) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: css }} />
-      <div className="stage">
-        <div className="left">
-          <div className="eyebrow"><span className="dot-live" />Active System · Online</div>
-          <div className="h1">Crafting<span>for the Digital</span>Age</div>
-          <p className="desc">Our precision-engineered solutions blend mechanical excellence with cutting-edge software to create products that push the boundaries of what's possible.</p>
-          <div className="cards">
-            {[
-              { i: "⚡", t: "Ultra Fast", d: "Sub-millisecond response and maximum throughput at every cycle." },
-              { i: "◈", t: "Smart Logic", d: "Adaptive AI that evolves with your operational environment." },
-              { i: "⬡", t: "Modular", d: "Hot-swap components without halting the production line." },
-              { i: "◉", t: "Precision", d: "0.01mm repeatability across 10,000+ daily operations." },
-            ].map(c => (
-              <div className="card" key={c.t}>
-                <div className="card-top"><div className="card-icon">{c.i}</div><h3>{c.t}</h3></div>
-                <p>{c.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="right">
+      <div className="stage relative w-full h-full flex items-center justify-center">
+        <div className="right w-full max-w-[500px]">
           <div className="glow-blob" />
           <div className="ring r1" /><div className="ring r2" /><div className="ring r3" />
           <div className="hud-panel">

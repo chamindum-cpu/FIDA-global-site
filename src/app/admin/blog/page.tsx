@@ -25,15 +25,24 @@ export default function BlogManagement() {
     fetchPosts();
   }, []);
 
-  const filteredPosts = posts.filter(post => 
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredPosts = posts.filter(post =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (post.cat && post.cat.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const deletePost = async (id: number) => {
     if (confirm("Are you sure you want to delete this post?")) {
-      // In a real app, you'd call a DELETE API route here
-      setPosts(posts.filter(p => p.id !== id));
+      try {
+        const res = await fetch(`/api/blogs?id=${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setPosts(posts.filter(p => p.id !== id));
+        } else {
+          alert('Failed to delete post');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error deleting post');
+      }
     }
   };
 
@@ -53,7 +62,7 @@ export default function BlogManagement() {
           <h2 className="text-3xl font-bold tracking-tight">Content Management</h2>
           <p className="text-[var(--text-secondary)] mt-1">Manage your blog posts, case studies, and news.</p>
         </div>
-        <Link 
+        <Link
           href="/admin/blog/create"
           className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-[var(--green)] to-[var(--green-dark)] text-white font-bold transition-smooth hover:scale-[1.02] shadow-lg shadow-[var(--green-glow)]"
         >
@@ -66,9 +75,9 @@ export default function BlogManagement() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--green)] transition-smooth" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search posts..." 
+          <input
+            type="text"
+            placeholder="Search posts..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-[var(--bg-surface)] border border-[var(--grey-dark)] rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--green)] transition-smooth text-sm"
@@ -96,7 +105,7 @@ export default function BlogManagement() {
             <tbody className="divide-y divide-[var(--grey-dark)]">
               <AnimatePresence mode="popLayout">
                 {filteredPosts.map((post) => (
-                  <motion.tr 
+                  <motion.tr
                     key={post.id}
                     layout
                     initial={{ opacity: 0 }}
@@ -131,9 +140,9 @@ export default function BlogManagement() {
                         <Link href={`/admin/blog/edit/${post.id}`} className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]" title="Edit">
                           <Edit2 size={16} />
                         </Link>
-                        <button 
+                        <button
                           onClick={() => deletePost(post.id)}
-                          className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400" 
+                          className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400"
                           title="Delete"
                         >
                           <Trash2 size={16} />
@@ -145,7 +154,7 @@ export default function BlogManagement() {
               </AnimatePresence>
             </tbody>
           </table>
-          
+
           {filteredPosts.length === 0 && (
             <div className="py-20 text-center">
               <p className="text-[var(--text-muted)]">No posts found matching your search.</p>
