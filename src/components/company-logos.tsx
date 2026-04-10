@@ -30,7 +30,7 @@ const TickerRow = ({
   const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <div 
+    <div
       className="flex overflow-hidden py-8 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -38,11 +38,12 @@ const TickerRow = ({
       <motion.div
         className="flex gap-20 items-center whitespace-nowrap px-8"
         style={{
-            animation: `ticker-${direction} ${speed}s linear infinite`,
-            animationPlayState: isPaused ? 'paused' : 'running'
+          animation: `ticker-${direction} ${speed}s linear infinite`,
+          animationPlayState: isPaused ? 'paused' : 'running'
         }}
       >
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
             @keyframes ticker-left {
                 0% { transform: translateX(0); }
                 100% { transform: translateX(-50%); }
@@ -58,22 +59,22 @@ const TickerRow = ({
           const customer = isCustomer ? (item as Customer) : null;
           const name = customer ? customer.name : (item as string);
 
-           return (
-             <div key={i} className="flex items-center justify-center shrink-0 w-56 h-28 mx-8 group cursor-pointer transition-smooth">
-               {customer && customer.logo_url ? (
-                 <img 
-                   src={customer.logo_url} 
-                   alt={name} 
-                   className="max-w-[180px] max-h-[90px] object-contain transition-all duration-500 pointer-events-none group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]" 
-                 />
-               ) : (
-                 <span
-                   className={`${fontClass} text-3xl md:text-5xl font-bold tracking-tighter uppercase text-white/50 group-hover:text-white transition-all duration-500 group-hover:scale-125`}
-                 >
-                   {name}
-                 </span>
-               )}
-             </div>
+          return (
+            <div key={i} className="flex items-center justify-center shrink-0 w-56 h-28 mx-8 group cursor-pointer transition-smooth">
+              {customer && customer.logo_url ? (
+                <img
+                  src={customer.logo_url}
+                  alt={name}
+                  className="max-w-[180px] max-h-[90px] object-contain transition-all duration-500 pointer-events-none group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_rgba(0,0,0,0.1)]"
+                />
+              ) : (
+                <span
+                  className={`${fontClass} text-3xl md:text-5xl font-bold tracking-tighter uppercase text-zinc-300 group-hover:text-zinc-900 transition-all duration-500 group-hover:scale-125`}
+                >
+                  {name}
+                </span>
+              )}
+            </div>
           );
         })}
       </motion.div>
@@ -109,13 +110,13 @@ export default function CompanyLogos() {
   const r3 = row3;
 
   return (
-    <section className="py-28 relative overflow-hidden bg-[#242428] border-y border-white/10">
-      {/* Intense Ambient Lighting Layers */}
-      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[500px] bg-white/10 blur-[150px] rounded-full pointer-events-none animate-pulse" />
-      <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute -bottom-20 -right-20 w-[800px] h-[800px] bg-blue-500/15 blur-[140px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
+    <section className="py-28 relative overflow-hidden bg-zinc-50 border-y border-zinc-200">
+      {/* Subtle Ambient Lighting Layers */}
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-zinc-100 to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[500px] bg-primary/5 blur-[150px] rounded-full pointer-events-none animate-pulse" />
+      <div className="absolute -top-20 -left-20 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute -bottom-20 -right-20 w-[800px] h-[800px] bg-accent/5 blur-[140px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '4s' }} />
 
       <div className="container mx-auto px-6 mb-12 relative z-10">
         <motion.div
@@ -127,7 +128,7 @@ export default function CompanyLogos() {
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">
             Global Partnership
           </span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white uppercase">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-zinc-900 uppercase">
             Brands We Work With
           </h2>
         </motion.div>

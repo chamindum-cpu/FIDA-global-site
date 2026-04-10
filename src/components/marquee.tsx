@@ -10,10 +10,10 @@ const items = [
 
 export default function MarqueeTicker() {
   return (
-    <div className="relative overflow-hidden py-6 border-y border-border">
+    <div className="relative overflow-hidden py-6 border-y border-white/5 bg-zinc-950">
       {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-zinc-950 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent z-10 pointer-events-none" />
 
       <div className="flex gap-0 marquee-track">
         {[...items, ...items].map((item, i) => (

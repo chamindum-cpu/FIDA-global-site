@@ -12,12 +12,12 @@ const stats = [
 
 export default function StatsSection() {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden bg-zinc-50">
       {/* Background line */}
-      <div className="absolute inset-0 border-y border-border/50" />
+      <div className="absolute inset-0 border-y border-zinc-200" />
 
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 divide-x divide-y lg:divide-y-0 divide-border/50">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 divide-x divide-y lg:divide-y-0 divide-zinc-200">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -30,10 +30,10 @@ export default function StatsSection() {
               <div className="text-5xl lg:text-6xl font-bold text-primary tracking-tight group-hover:scale-105 transition-transform">
                 <AnimatedCounter target={stat.value} suffix={stat.suffix} prefix={stat.prefix} />
               </div>
-              <div className="text-base font-semibold text-secondary dark:text-white">
+              <div className="text-base font-bold text-zinc-900">
                 {stat.label}
               </div>
-              <div className="text-sm text-muted">{stat.desc}</div>
+              <div className="text-sm text-zinc-500">{stat.desc}</div>
             </motion.div>
           ))}
         </div>

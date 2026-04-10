@@ -1,22 +1,24 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowUpRight, Loader2, Briefcase } from "lucide-react";
+import SpaceBackground from "./space-background";
 
 export default function ProjectsSection() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // This ref must be attached to a stable element that doesn't disappear
-  const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     async function fetchProjects() {
       try {
         const res = await fetch("/api/projects");
-        const data = await res.json();
-        setProjects(data.filter((p: any) => p.status === 'Published'));
+        if (res.ok) {
+          const data = await res.json();
+          setProjects(data.filter((p: any) => p.status === "Published"));
+        }
       } catch (err) {
         console.error("Error fetching projects:", err);
       } finally {
@@ -26,144 +28,118 @@ export default function ProjectsSection() {
     fetchProjects();
   }, []);
 
-  // useScroll hook
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    if (loading || projects.length === 0) return;
-
-    const unsub = scrollYProgress.on("change", (latest) => {
-      const index = Math.min(Math.floor(latest * projects.length), projects.length - 1);
-      setActiveIndex(Math.max(0, index));
-    });
-    return () => unsub();
-  }, [scrollYProgress, projects.length, loading]);
-
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", `-${(projects.length - 1) * 60}vw`]);
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
+        <Loader2 className="animate-spin text-blue-500" size={30} />
+      </section>
+    );
+  }
 
   return (
-    // FIX: The ref is now on this outer wrapper which exists during loading AND after.
-    <section ref={containerRef} className="relative h-[600vh] bg-black">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+    <section className="py-24 bg-[#020617] relative overflow-hidden">
+      <SpaceBackground />
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20">
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
+      </div>
 
-        {loading ? (
-          <div className="h-full w-full flex flex-col items-center justify-center gap-4 text-white">
-            <Loader2 className="animate-spin text-primary" size={40} />
-            <p className="text-sm font-medium tracking-widest uppercase opacity-50">Hydrating Gallery...</p>
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8 text-left">
+          <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-blue-500 text-xs font-bold uppercase tracking-[0.4em] mb-4 flex items-center gap-2"
+            >
+              <div className="w-8 h-[1px] bg-blue-500" />
+              Portfolio
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none">
+              Selected <span className="text-zinc-700 italic">Work</span>
+            </h2>
           </div>
-        ) : (
-          <>
-            {/* Background Layer */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={projects[activeIndex]?.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.2 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-                className="absolute inset-0 z-0 bg-cover bg-center grayscale"
-                style={{ backgroundImage: `url(${projects[activeIndex]?.image_url})` }}
-              />
-            </AnimatePresence>
+          <p className="text-zinc-600 text-sm max-w-xs font-medium border-l border-white/5 pl-6 hidden lg:block">
+            Exploring our latest success stories across 12 countries.
+          </p>
+        </div>
+      </div>
 
-            <div className="relative z-10 w-full h-full flex flex-col justify-center py-10">
-              <div className="container mx-auto px-10 mb-8 shrink-0">
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary">Work Archive</span>
-                <h2 className="text-[6.5vw] font-bold text-white uppercase leading-[0.9] tracking-tighter">
-                  Selected<br />Projects
-                </h2>
-              </div>
-
-              {/* Horizontal Track */}
-              <motion.div
-                style={{ x }}
-                className="flex gap-[8vw] pl-[25vw] pr-[50vw] perspective-2000 items-center"
-              >
-                {projects.map((project, i) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    index={i}
-                    total={projects.length}
-                    scrollYProgress={scrollYProgress}
-                  />
-                ))}
-              </motion.div>
+      {/* Horizontal List */}
+      <div className="relative group">
+        <div className="flex gap-8 overflow-x-auto pb-20 pt-10 px-[10vw] no-scrollbar snap-x snap-mandatory scroll-smooth">
+          {projects.map((project, index) => (
+            <div key={project.id} className="snap-center">
+              <ProjectCard project={project} index={index} />
             </div>
+          ))}
 
-            {/* HUD Progress */}
-            <div className="absolute bottom-10 left-10 flex items-center gap-6">
-              <div className="h-[1px] w-40 bg-white/10 overflow-hidden">
-                <motion.div
-                  className="h-full bg-primary"
-                  style={{ width: `${((activeIndex + 1) / projects.length) * 100}%` }}
-                />
-              </div>
-              <span className="text-white font-mono text-xs tracking-tighter">
-                {String(activeIndex + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
-              </span>
+          {/* View All Card */}
+          <Link
+            href="/projects"
+            className="snap-center shrink-0 w-[80vw] md:w-[35vw] aspect-[4/3] rounded-[2.5rem] border border-white/5 bg-white/[0.02] flex flex-col items-center justify-center gap-6 group/all transition-all hover:bg-white/5 hover:border-blue-500/20"
+          >
+            <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover/all:scale-110 group-hover/all:bg-blue-600 group-hover/all:text-white transition-all duration-500 shadow-2xl shadow-blue-500/20">
+              <ArrowUpRight size={36} />
             </div>
-          </>
-        )}
+            <div className="text-center">
+              <h3 className="text-2xl font-black text-white uppercase tracking-tighter">View Projects</h3>
+              <p className="text-zinc-700 text-xs font-medium uppercase tracking-widest mt-2">Browse All Case Studies</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Side Gradients */}
+        <div className="absolute top-0 left-0 w-20 h-full bg-gradient-to-r from-[#0a0a0c] to-transparent z-10 hidden md:block" />
+        <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-[#0a0a0c] to-transparent z-10 hidden md:block" />
       </div>
     </section>
   );
 }
 
-function ProjectCard({ project, index, total, scrollYProgress }: any) {
-  const start = index / total;
-  const end = (index + 1) / total;
-  const focus = (start + end) / 2;
-
-  // Subtle Warp Range
-  const range = [Math.max(0, focus - 0.25), focus, Math.min(1, focus + 0.25)];
-
-  // Subtle tilting instead of flipping
-  const rotateY = useTransform(scrollYProgress, range, [-45, 0, 45]);
-  const scale = useTransform(scrollYProgress, range, [0.85, 1.1, 0.85]);
-  const opacity = useTransform(scrollYProgress, [Math.max(0, focus - 0.35), focus, Math.min(1, focus + 0.35)], [0.3, 1, 0.3]);
+function ProjectCard({ project, index }: { project: any; index: number }) {
+  const router = useRouter();
 
   return (
     <motion.div
-      onClick={() => window.open(`/projects#${project.id}`, '_self')}
-      style={{ scale, opacity, perspective: "1000px" }}
-      className="shrink-0 w-[50vw] md:w-[22vw] aspect-[3/4] relative cursor-pointer"
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      viewport={{ once: true }}
+      onClick={() => router.push(`/projects/${project.ProjectId}`)}
+      className="shrink-0 w-[85vw] md:w-[45vw] lg:w-[28vw] flex flex-col group cursor-pointer snap-center"
     >
-      <motion.div
-        style={{ rotateY, transformStyle: "preserve-3d" }}
-        className="w-full h-full relative rounded-[2rem] overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl group"
-      >
+      {/* Image */}
+      <div className="aspect-[4/3] rounded-[2rem] overflow-hidden bg-zinc-900 mb-6 border border-white/5 group-hover:border-blue-500/30 transition-all duration-500">
         {project.image_url ? (
           <img
             src={project.image_url}
             alt={project.title}
-            className="w-full h-full object-cover transition-smooth group-hover:scale-110"
+            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
           />
         ) : (
-          <div className="w-full h-full bg-white/5 flex items-center justify-center text-white/20 font-black">FIDA PROJECT</div>
-        )}
-
-        {/* Immersive Front-Facing Content */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-8 flex flex-col justify-end">
-          <div className="space-y-3">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">{project.category_name}</span>
-            <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none">{project.title}</h3>
-            <p className="text-xs text-white/60 line-clamp-3 leading-relaxed">{project.description}</p>
-
-            <div className="pt-4 flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all">
-                <ArrowUpRight size={20} className="text-white" />
-              </div>
-              <span className="text-[9px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white transition-colors">Project Insight</span>
-            </div>
+          <div className="w-full h-full bg-zinc-800 flex items-center justify-center text-zinc-600">
+            <Briefcase size={40} />
           </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex items-start justify-between px-2">
+        <div>
+          <p className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-1">
+            {project.category_name || "Enterprise"}
+          </p>
+          <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tight group-hover:text-blue-500 transition-colors">
+            {project.title}
+          </h3>
         </div>
-      </motion.div>
+        <div className="h-10 w-10 shrink-0 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-600 group-hover:border-blue-600 transition-all">
+          <ArrowUpRight size={18} className="text-white" />
+        </div>
+      </div>
     </motion.div>
   );
 }

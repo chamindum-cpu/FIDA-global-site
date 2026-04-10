@@ -57,6 +57,9 @@ export default function ServiceManagement() {
       title: formData.get("title"),
       description: formData.get("description"),
       imageUrl: imagePreview,
+      iconName: formData.get("iconName"),
+      label: formData.get("label"),
+      features: formData.get("features"),
       orderIndex: parseInt(formData.get("orderIndex") as string) || 0,
       status: "Published"
     };
@@ -161,6 +164,7 @@ export default function ServiceManagement() {
                   <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-[10px] font-bold uppercase tracking-widest">{s.status}</span>
                 </div>
                 <h3 className="text-xl font-bold text-white">{s.title}</h3>
+                <p className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]">{s.label}</p>
                 <p className="text-sm text-white/50 line-clamp-2 leading-relaxed">{s.description}</p>
               </div>
             </motion.div>
@@ -192,6 +196,26 @@ export default function ServiceManagement() {
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Description</label>
                    <textarea name="description" defaultValue={editingItem?.description} required rows={4} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-blue-500 outline-none resize-none leading-relaxed" placeholder="Detailed service description..." />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Label / Category</label>
+                    <input name="label" defaultValue={editingItem?.label} required className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-blue-500 outline-none transition-all" placeholder="e.g. Infrastructure" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Icon Name</label>
+                    <select name="iconName" defaultValue={editingItem?.icon_name || "Server"} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer">
+                      {["Server", "Shield", "Cloud", "Terminal", "Database", "Cpu", "Network", "Settings"].map(icon => (
+                        <option key={icon} value={icon} className="bg-black text-white">{icon}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                   <label className="text-[10px] font-bold uppercase tracking-widest text-white/40 ml-1">Features (one per line)</label>
+                   <textarea name="features" defaultValue={editingItem?.features} rows={4} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:border-blue-500 outline-none resize-none leading-relaxed" placeholder="Cloud migration&#10;FinOps&#10;Cost optimization..." />
                 </div>
 
                 <div className="space-y-4">

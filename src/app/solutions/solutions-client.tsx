@@ -74,7 +74,7 @@ function SolutionCard({ item, index }: any) {
             <Link
               href={item.website_url || "/contact"}
               target={item.website_url ? "_blank" : "_self"}
-              className="inline-flex items-center gap-3 px-12 py-5 rounded-xl font-black text-xs uppercase text-black bg-blue-500 transition-smooth hover:scale-105 shadow-[0_20px_40px_-15px_rgba(59,130,246,0.3)]"
+              className="inline-flex items-center gap-3 px-12 py-5 rounded-xl font-black text-xs uppercase bg-white text-zinc-950 transition-all hover:bg-primary hover:text-white hover:scale-105 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]"
             >
               Launch Project <ExternalLink size={16} />
             </Link>

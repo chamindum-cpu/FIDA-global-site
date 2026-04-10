@@ -19,11 +19,11 @@ export default function Home() {
       <Hero />
       <MarqueeTicker />
       <StatsSection />
-      <CompanyLogos />
       <ProductsSection />
       <ExpertiseSection />
       <MarvelousItems />
       <ProjectsSection />
+      <CompanyLogos />
       <TestimonialsSection />
       <BlogSection />
       <CtaSection />

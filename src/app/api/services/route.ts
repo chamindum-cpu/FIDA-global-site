@@ -14,7 +14,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { id, title, description, imageUrl, iconName, orderIndex, status } = data;
+    const { id, title, description, imageUrl, iconName, label, features, orderIndex, status } = data;
     const pool = await getDbConnection();
 
     await pool.request()
@@ -23,6 +23,8 @@ export async function POST(request: Request) {
       .input('description', sql.NVarChar(sql.MAX), description)
       .input('image_url', sql.NVarChar(sql.MAX), imageUrl)
       .input('icon_name', sql.NVarChar(100), iconName)
+      .input('label', sql.NVarChar(100), label)
+      .input('features', sql.NVarChar(sql.MAX), features) // Stored as JSON string or comma-separated
       .input('order_index', sql.Int, orderIndex || 0)
       .input('status', sql.NVarChar(50), status || 'Published')
       .execute('sp_UpsertService');

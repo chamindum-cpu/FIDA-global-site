@@ -9,6 +9,7 @@ const links = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
   { name: "Services", href: "/services" },
+  { name: "Projects", href: "/projects" },
   { name: "Solutions", href: "/solutions" },
   { name: "Blog", href: "/blog" },
   { name: "Careers", href: "/careers" },
@@ -49,14 +50,14 @@ export default function Navbar() {
           <div className="flex items-center gap-8">
             {/* ── Desktop Links pulled "out" ── */}
             <div className="hidden lg:flex items-center gap-12 mr-8">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#a8b8d0] hover:text-primary transition-all hover:scale-105"
               >
                 Home
               </Link>
-              <Link 
-                href="/about" 
+              <Link
+                href="/about"
                 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#a8b8d0] hover:text-primary transition-all hover:scale-105"
               >
                 About Us

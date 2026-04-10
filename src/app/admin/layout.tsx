@@ -32,8 +32,8 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] admin-theme">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-[var(--grey-dark)] bg-[var(--bg-surface)] fixed h-screen z-20 overflow-y-auto">
-        <div className="p-8">
+      <aside className="w-64 border-r border-[var(--grey-dark)] bg-[var(--bg-surface)] fixed h-screen z-20 flex flex-col">
+        <div className="p-8 shrink-0">
           <Link href="/admin" className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--green)] to-[var(--blue)] flex items-center justify-center shadow-lg shadow-[var(--green-glow)]">
               <span className="font-bold text-white text-xl">F</span>
@@ -45,7 +45,7 @@ export default function AdminLayout({
           </Link>
         </div>
 
-        <nav className="px-4 py-4 space-y-1">
+        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar">
           <SidebarLink href="/admin" icon={<LayoutDashboard size={20} />} label="Dashboard" active={pathname === "/admin"} />
           <div className="mt-8 mb-2 px-4">
             <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-semibold">Content</p>
@@ -68,7 +68,7 @@ export default function AdminLayout({
           <SidebarLink href="/admin/settings" icon={<Settings size={20} />} label="Settings" active={pathname === "/admin/settings"} />
         </nav>
 
-        <div className="absolute bottom-8 left-4 right-4 pt-8 border-t border-[var(--grey-dark)]">
+        <div className="p-4 shrink-0 border-t border-[var(--grey-dark)] bg-[var(--bg-surface)]">
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-[var(--bg-elevated)] transition-smooth group"

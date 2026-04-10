@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Server, Shield, Cloud, Terminal, Cpu, Users, Zap,
-  Database, Code, Award, Loader2, Search, Building2, Layout, Briefcase, Globe
+  Database, Code, Award, Loader2, Search, Building2, Layout, Briefcase, Globe,
+  ArrowUpRight
 } from "lucide-react";
+import SpaceBackground from "./space-background";
 
 // Helper to map icon names from DB to components
 const IconMap: { [key: string]: any } = {
@@ -67,84 +69,89 @@ export default function ExpertiseSection() {
   // If no expertise yet, don't show the section or show a minimal version
   if (expertise.length === 0) return null;
 
+  const getIcon = (title: string) => {
+    const key = title.split(' ')[0] as keyof typeof IconMap;
+    const Icon = IconMap[key] || Server;
+    return <Icon size={28} strokeWidth={1.5} />;
+  };
+
   return (
-    <section className="py-32 relative" id="solutions">
-      <div className="container mx-auto px-6">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="text-center space-y-6 mb-24 max-w-3xl mx-auto"
-        >
-          <div className="text-sm font-bold text-primary uppercase tracking-widest bg-primary/10 px-4 py-2 rounded-full inline-flex">
-            Our Expertise
-          </div>
-          <h2 className="text-4xl lg:text-6xl font-bold tracking-tight text-secondary dark:text-white leading-[1.1]">
-            Tailored Excellence for{" "}
-            <span className="text-primary italic">Every</span>
-            <br />
-            Business Need
-          </h2>
-          <p className="text-xl text-muted leading-relaxed">
-            From smart HR systems to global infrastructure, we deliver innovation
-            that works as hard as you do.
-          </p>
-        </motion.div>
+    <section className="py-32 bg-[#020617] overflow-hidden relative">
+      <SpaceBackground />
+      {/* Background Glows */}
+      <div className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full" />
+      </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {expertise.map((card) => {
-            const Icon = IconMap[card.icon] || Server;
-            return (
-              <motion.div
-                key={card.number}
-                variants={cardVariants}
-                whileHover={{ y: -8 }}
-                className={`group relative overflow-hidden rounded-[2.5rem] glass border border-border ${card.border} p-10 flex flex-col space-y-6 cursor-pointer transition-smooth`}
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <div className="max-w-3xl mb-24">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-primary text-xs font-bold uppercase tracking-[0.4em] mb-4 flex items-center gap-2"
+          >
+            <div className="w-8 h-[1px] bg-primary" />
+            Core Capabilities
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-tight"
+          >
+            Sovereign Technology <br />
+            <span className="text-zinc-700 italic">Redefined</span>
+          </motion.h2>
+        </div>
+
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {expertise.map((exp, i) => (
+            <motion.div
+              key={exp.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
+              viewport={{ once: true }}
+              className="group relative h-[380px] perspective-1000"
+            >
+              <div
+                className="relative h-full w-full rounded-[2.5rem] bg-zinc-900/40 backdrop-blur-xl border border-white/5 p-10 
+                transition-all duration-500 overflow-hidden group-hover:border-primary/30 group-hover:bg-zinc-900/60"
               >
-                {/* Gradient bg */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                />
-
-                {/* Number */}
-                <div className="relative z-10 text-7xl font-black text-border/60 group-hover:text-border transition-colors leading-none select-none">
-                  {card.number}
+                {/* Visual Number behind content */}
+                <div className="absolute -bottom-10 -right-10 text-[180px] font-black text-white/[0.03] italic leading-none select-none group-hover:text-primary/5 transition-colors">
+                  {(i + 1).toString().padStart(2, '0')}
                 </div>
 
-                {/* Icon */}
-                <div className="relative z-10 w-14 h-14 rounded-2xl bg-secondary/5 dark:bg-white/5 border border-border group-hover:border-primary/30 flex items-center justify-center transition-colors">
-                  <Icon className="w-7 h-7 text-primary" />
-                </div>
+                {/* Card Content */}
+                <div className="relative z-10 h-full flex flex-col">
+                  <div className="w-16 h-16 rounded-3xl bg-zinc-800/50 flex items-center justify-center mb-8 border border-white/5 
+                    group-hover:bg-primary group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-2xl">
+                    <span className="text-white group-hover:text-zinc-950 transition-colors">
+                      {getIcon(exp.title || "")}
+                    </span>
+                  </div>
 
-                <div className="relative z-10 space-y-3 flex-1">
-                  <h3 className="text-2xl font-bold text-secondary dark:text-white">
-                    {card.title}
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-4 group-hover:text-primary transition-colors">
+                    {exp.title}
                   </h3>
-                  <p className="text-muted leading-relaxed">{card.description}</p>
-                </div>
 
-                <div className="relative z-10 pt-4 flex items-center gap-2 text-primary font-bold text-sm tracking-widest uppercase">
-                  Explore
-                  <motion.span
-                    className="inline-block"
-                    animate={{ x: 0 }}
-                    whileHover={{ x: 4 }}
-                  >
-                    →
-                  </motion.span>
+                  <p className="text-zinc-500 text-sm leading-relaxed mb-auto group-hover:text-zinc-400 transition-colors">
+                    {exp.description}
+                  </p>
+
+                  <div className="relative z-10 pt-8 flex items-center gap-3 text-primary font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                    Discover Capabilities
+                    <ArrowUpRight size={14} />
+                  </div>
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
