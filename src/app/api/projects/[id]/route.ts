@@ -32,7 +32,7 @@ export async function GET(
       ImageUrl: project.ImageUrl || project.image_url,
       ClientName: project.ClientName || project.client_name,
       CategoryName: project.CategoryName || project.category_name,
-      ProjectId: project.ProjectId || project.id
+      ProjectId: project.ProjectId || project.id || project.Id
     };
     
     return NextResponse.json(formattedProject);

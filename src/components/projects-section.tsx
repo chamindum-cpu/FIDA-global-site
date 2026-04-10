@@ -108,7 +108,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       whileInView={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
-      onClick={() => router.push(`/projects/${project.ProjectId}`)}
+      onClick={() => router.push(`/projects/${project.id}`)}
       className="shrink-0 w-[85vw] md:w-[45vw] lg:w-[28vw] flex flex-col group cursor-pointer snap-center"
     >
       {/* Image */}

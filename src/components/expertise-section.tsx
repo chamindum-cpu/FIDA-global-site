@@ -121,10 +121,7 @@ export default function ExpertiseSection() {
                 className="relative h-full w-full rounded-[2.5rem] bg-zinc-900/40 backdrop-blur-xl border border-white/5 p-10 
                 transition-all duration-500 overflow-hidden group-hover:border-primary/30 group-hover:bg-zinc-900/60"
               >
-                {/* Visual Number behind content */}
-                <div className="absolute -bottom-10 -right-10 text-[180px] font-black text-white/[0.03] italic leading-none select-none group-hover:text-primary/5 transition-colors">
-                  {(i + 1).toString().padStart(2, '0')}
-                </div>
+
 
                 {/* Card Content */}
                 <div className="relative z-10 h-full flex flex-col">

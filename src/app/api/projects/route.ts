@@ -5,7 +5,20 @@ export async function GET() {
   try {
     const pool = await getDbConnection();
     const result = await pool.request().execute('sp_GetAllProjects');
-    return NextResponse.json(result.recordset);
+    
+    // Normalize field names to handle naming inconsistencies from DB
+    const projects = result.recordset.map((p: any) => ({
+      ...p,
+      id: p.ProjectId || p.id || p.Id,
+      ProjectId: p.ProjectId || p.id || p.Id,
+      title: p.title || p.Title,
+      description: p.description || p.Description,
+      image_url: p.image_url || p.ImageUrl,
+      category_name: p.category_name || p.CategoryName,
+      client_name: p.client_name || p.ClientName
+    }));
+
+    return NextResponse.json(projects);
   } catch (error: any) {
     return NextResponse.json({ message: "Failed to fetch projects", error: error.message }, { status: 500 });
   }
