@@ -9,9 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/mssql": "^9.1.11",
     "@types/nodemailer": "^8.0.0",
+    "@types/three": "^0.184.0",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.7.0",
@@ -22,7 +25,8 @@
     "quill": "^2.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-quill": "^2.0.0"
+    "react-quill": "^2.0.0",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/node": "^18",

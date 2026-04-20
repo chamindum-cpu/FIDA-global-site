@@ -43,6 +43,7 @@ export const metadata: Metadata = {
 };
 
 import PageTransition from "@/components/page-transition";
+import ChatBot from "@/components/chat-bot";
 
 export default function RootLayout({
   children,
@@ -89,6 +90,7 @@ export default function RootLayout({
         <PageTransition>
           {children}
         </PageTransition>
+        <ChatBot />
       </body>
     </html>
   );
