@@ -8,6 +8,7 @@ import { X, Menu, ArrowRight } from "lucide-react";
 const links = [
   { name: "Home", href: "/" },
   { name: "About Us", href: "/about" },
+  { name: "Company Profile", href: "https://www.fidaglobal.com/FIDAGlobalProfile2024.pdf", isExternal: true },
   { name: "Services", href: "/services" },
   { name: "Projects", href: "/projects" },
   { name: "Solutions", href: "/solutions" },
@@ -135,6 +136,8 @@ export default function Navbar() {
                   >
                     <Link
                       href={link.href}
+                      target={(link as any).isExternal ? "_blank" : undefined}
+                      rel={(link as any).isExternal ? "noopener noreferrer" : undefined}
                       onClick={() => setMenuOpen(false)}
                       className="group flex items-center justify-between py-4 border-b border-white/5 transition-smooth"
                     >

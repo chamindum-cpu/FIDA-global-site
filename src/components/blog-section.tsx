@@ -40,7 +40,7 @@ export default function BlogSection() {
         const res = await fetch("/api/blogs");
         const data = await res.json();
         // Take the latest 6 published posts
-        setPosts(data.slice(0, 7)); 
+        setPosts(data.slice(0, 7));
       } catch (err) {
         console.error("Failed to fetch homepage blogs:", err);
       } finally {
@@ -138,11 +138,11 @@ export default function BlogSection() {
                   </div>
                   <div className="flex justify-end order-first lg:order-last">
                     <div className="relative w-full aspect-video lg:aspect-square max-w-sm rounded-[2rem] overflow-hidden border border-white/10">
-                       {featured.imageUrl ? (
-                         <img src={featured.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-smooth" />
-                       ) : (
-                         <div className="w-full h-full bg-gradient-to-br from-primary/30 to-transparent" />
-                       )}
+                      {featured.imageUrl ? (
+                        <img src={featured.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-smooth" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/30 to-transparent" />
+                      )}
                     </div>
                   </div>
                 </div>

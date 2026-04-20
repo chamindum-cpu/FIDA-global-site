@@ -10,11 +10,22 @@ const SMOOTH = [0.16, 1, 0.3, 1] as const;
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const prevPathname = useRef<string>(pathname);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start as loading for the very first time
   const [displayedPathname, setDisplayedPathname] = useState(pathname);
 
+  // Initial load effect
   useEffect(() => {
-    // Only trigger on actual page changes (not the first paint)
+    // We already initialized isLoading to true.
+    // Just need to turn it off after the animation completes.
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1800); // Slightly longer for first load to feel premium
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Only trigger on actual page changes (not the first paint, handled above)
     if (pathname === prevPathname.current) return;
 
     prevPathname.current = pathname;
@@ -30,7 +41,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     // 3. After page is swapped + a brief pause, hide loader
     const hideTimer = setTimeout(() => {
       setIsLoading(false);
-    }, 1050);
+    }, 1250);
 
     return () => {
       clearTimeout(swapTimer);

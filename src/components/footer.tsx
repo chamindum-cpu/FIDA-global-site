@@ -9,6 +9,7 @@ const navGroups = [
     title: "Company",
     links: [
       { name: "About Us", href: "/about" },
+      { name: "Company Profile", href: "https://www.fidaglobal.com/FIDAGlobalProfile2024.pdf", isExternal: true },
       { name: "Careers", href: "/careers" },
       { name: "Blog", href: "/blog" },
       { name: "Press", href: "/press" },
@@ -67,10 +68,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="flex items-center gap-3 group w-fit">
-              <img 
-                src="/Fidalong.png" 
-                alt="FIDA Global" 
-                className="h-10 w-auto object-contain" 
+              <img
+                src="/Fidalong.png"
+                alt="FIDA Global"
+                className="h-10 w-auto object-contain"
               />
             </Link>
             <p className="text-muted leading-relaxed max-w-xs">
@@ -121,6 +122,8 @@ export default function Footer() {
                     <li key={link.name}>
                       <Link
                         href={link.href}
+                        target={(link as any).isExternal ? "_blank" : undefined}
+                        rel={(link as any).isExternal ? "noopener noreferrer" : undefined}
                         className="text-sm text-secondary/80 dark:text-white/70 hover:text-primary transition-colors font-medium"
                       >
                         {link.name}

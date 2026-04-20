@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useCallback } from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import SeasonalDecor from "./seasonal-decor";
 
 /* ─── Animated Globe ──────────────────────────────────────── */
@@ -320,6 +320,15 @@ export default function Hero() {
               className="glass border text-secondary dark:text-white px-8 py-4 rounded-full font-bold text-base hover:border-primary/40 transition-smooth"
             >
               Learn More
+            </Link>
+            <Link
+              href="https://www.fidaglobal.com/FIDAGlobalProfile2024.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 rounded-full font-bold text-base text-primary hover:text-white transition-smooth flex items-center gap-2 group"
+            >
+              Company Profile
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
 
