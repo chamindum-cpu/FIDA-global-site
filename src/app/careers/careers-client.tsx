@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Clock, ArrowUpRight, Zap, Globe, Users, TrendingUp } from "lucide-react";
+import { MapPin, Clock, ArrowUpRight, Zap, Globe, Users, TrendingUp, Loader2 } from "lucide-react";
 
 const perks = [
   { icon: Globe, color: "var(--green)", title: "Work Globally", desc: "Remote-first with offices in 12 countries. Work where you thrive." },
@@ -10,18 +11,28 @@ const perks = [
   { icon: Users, color: "var(--grey-light)", title: "Diverse Team", desc: "40+ nationalities. A culture of inclusion, respect, and collaboration." },
 ];
 
-const jobs = [
-  { id: 1, title: "Senior Cloud Infrastructure Engineer", dept: "Infrastructure", type: "Full-time", location: "Dubai / Remote", color: "var(--green)" },
-  { id: 2, title: "Cybersecurity Analyst (SOC L2)", dept: "Security", type: "Full-time", location: "Nairobi / Remote", color: "var(--blue)" },
-  { id: 3, title: "Full-Stack Engineer — FIDA HR", dept: "Product Engineering", type: "Full-time", location: "Amsterdam / Remote", color: "var(--green)" },
-  { id: 4, title: "AI / ML Engineer", dept: "AI Practice", type: "Full-time", location: "Remote (Global)", color: "var(--blue)" },
-  { id: 5, title: "IT Operations Manager", dept: "Managed Services", type: "Full-time", location: "Riyadh", color: "var(--grey-light)" },
-  { id: 6, title: "Pre-Sales Solutions Architect", dept: "Sales Engineering", type: "Full-time", location: "London / Dubai", color: "var(--green)" },
-  { id: 7, title: "Network Design Engineer (SD-WAN)", dept: "Networking", type: "Full-time", location: "Dubai", color: "var(--blue)" },
-  { id: 8, title: "Technical Project Manager", dept: "Delivery", type: "Full-time", location: "Remote (EMEA)", color: "var(--grey-light)" },
-];
-
 export default function CareersClient() {
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch("/api/admin/careers");
+      const data = await res.json();
+      if (data.success) {
+        setJobs(data.data.filter((j: any) => j.is_active));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Perks */}
@@ -67,35 +78,47 @@ export default function CareersClient() {
         </motion.div>
 
         <div className="space-y-4">
-          {jobs.map((job, i) => (
-            <motion.div
-              key={job.id}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.5, ease: "easeOut" }}
-            >
-              <div className="glass rounded-2xl px-8 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:-translate-x-1 transition-smooth card-hover-green relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-2xl" style={{ background: job.color }} />
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 text-[var(--green)]">
+              <Loader2 className="w-8 h-8 animate-spin mb-4" />
+              <p className="text-sm font-semibold tracking-widest uppercase">Loading Roles...</p>
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="glass rounded-2xl p-12 text-center border border-dashed border-[var(--grey-light)]">
+              <h3 className="text-xl font-bold mb-2">No Open Roles Right Now</h3>
+              <p className="text-[var(--text-muted)]">Check back later or send us an open application!</p>
+            </div>
+          ) : (
+            jobs.map((job, i) => (
+              <motion.div
+                key={job.id}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06, duration: 0.5, ease: "easeOut" }}
+              >
+                <div className="glass rounded-2xl px-8 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:-translate-x-1 transition-smooth card-hover-green relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-0.5 rounded-l-2xl" style={{ background: job.color }} />
 
-                <div className="flex-1 space-y-1 pl-2">
-                  <h3 className="font-bold text-lg group-hover:transition-colors" style={{ color: "var(--text-primary)" }}>{job.title}</h3>
-                  <div className="flex items-center flex-wrap gap-4 text-sm" style={{ color: "var(--text-secondary)" }}>
-                    <span className="font-medium" style={{ color: job.color }}>{job.dept}</span>
-                    <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{job.type}</span>
-                    <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{job.location}</span>
+                  <div className="flex-1 space-y-1 pl-2">
+                    <h3 className="font-bold text-lg group-hover:transition-colors" style={{ color: "var(--text-primary)" }}>{job.title}</h3>
+                    <div className="flex items-center flex-wrap gap-4 text-sm" style={{ color: "var(--text-secondary)" }}>
+                      <span className="font-medium" style={{ color: job.color }}>{job.dept}</span>
+                      <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" />{job.type}</span>
+                      <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" />{job.location}</span>
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm flex-shrink-0 transition-smooth hover:scale-105"
-                  style={{ background: `${job.color}18`, color: job.color, border: `1px solid ${job.color}30` }}
-                >
-                  Apply Now <ArrowUpRight className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                  <button
+                    className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm flex-shrink-0 transition-smooth hover:scale-105"
+                    style={{ background: `${job.color}18`, color: job.color, border: `1px solid ${job.color}30` }}
+                  >
+                    Apply Now <ArrowUpRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
 
         {/* Open application CTA */}
