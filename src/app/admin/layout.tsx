@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileText, Settings, LogOut, Users, BarChart3, Briefcase, Award, Lightbulb, MessageSquare, Layout } from "lucide-react";
+import { LayoutDashboard, FileText, Settings, LogOut, Users, BarChart3, Briefcase, Award, Lightbulb, MessageSquare, Layout, Bot } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -64,6 +64,7 @@ export default function AdminLayout({
           <div className="mt-8 mb-2 px-4">
             <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-semibold">System</p>
           </div>
+          <SidebarLink href="/admin/ai-knowledge" icon={<Bot size={20} />} label="AI Knowledge Base" active={pathname.startsWith("/admin/ai-knowledge")} />
           <SidebarLink href="/admin/users" icon={<Users size={20} />} label="Users" active={pathname === "/admin/users"} />
           <SidebarLink href="/admin/analytics" icon={<BarChart3 size={20} />} label="Analytics" active={pathname === "/admin/analytics"} />
           <SidebarLink href="/admin/settings" icon={<Settings size={20} />} label="Settings" active={pathname === "/admin/settings"} />
