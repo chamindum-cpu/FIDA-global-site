@@ -14,6 +14,8 @@ const values = [
   { icon: Award, color: "var(--grey)", title: "Award-Winning", desc: "15+ industry awards recognise our commitment to excellence in IT service delivery." },
 ];
 
+import { useState, useEffect } from "react";
+
 const team = [
   { name: "Ahmed Al-Rashid", role: "Chief Executive Officer", initials: "AR", color: "var(--green)" },
   { name: "Sarah Mitchell", role: "Chief Technology Officer", initials: "SM", color: "var(--blue)" },
@@ -23,16 +25,30 @@ const team = [
   { name: "Maria Santos", role: "Chief Operating Officer", initials: "MS", color: "var(--grey)" },
 ];
 
-const milestones = [
-  { year: "2010", text: "FIDA Global founded in Dubai with a team of 8 engineers." },
-  { year: "2014", text: "Expanded into East Africa, opening offices in Nairobi and Dar es Salaam." },
-  { year: "2017", text: "Launched FIDA HR — our first proprietary SaaS product for workforce management." },
-  { year: "2019", text: "Reached 200+ enterprise clients; awarded 'Best IT Provider' in the GCC." },
-  { year: "2022", text: "Opened European HQ in Amsterdam; expanded to 12 countries." },
-  { year: "2025", text: "Launched AI Integration practice and surpassed 500 enterprise clients." },
-];
-
 export default function AboutClient() {
+
+  const [milestones, setMilestones] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTimeline();
+  }, []);
+
+  const fetchTimeline = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/timeline");
+      const data = await res.json();
+      if (data.success) {
+        setMilestones(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {/* Stats */}
@@ -92,13 +108,21 @@ export default function AboutClient() {
             className="relative"
           >
             <div className="absolute inset-0 rounded-[3rem] blur-[80px] opacity-20" style={{ background: "var(--blue)" }} />
-            <div className="relative glass rounded-[3rem] p-10 space-y-6">
-              {milestones.map((m, i) => (
-                <div key={m.year} className="flex gap-6 items-start">
-                  <div className="text-xs font-black uppercase tracking-widest pt-1 w-12 flex-shrink-0" style={{ color: i % 2 === 0 ? "var(--green)" : "var(--blue)" }}>{m.year}</div>
-                  <div className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{m.text}</div>
+            <div className="relative glass rounded-[3rem] p-10 space-y-6 min-h-[300px]">
+              {loading ? (
+                <div className="flex items-center justify-center h-full py-10">
+                  <div className="w-8 h-8 rounded-full border-4 border-[var(--green)] border-t-transparent animate-spin mx-auto"></div>
                 </div>
-              ))}
+              ) : milestones.length === 0 ? (
+                 <p className="text-center text-[var(--text-muted)] py-10">Company history currently unavailable.</p>
+              ) : (
+                milestones.map((m, i) => (
+                  <div key={m.TimelineId || i} className="flex gap-6 items-start">
+                    <div className="text-xs font-black uppercase tracking-widest pt-1 w-12 flex-shrink-0" style={{ color: i % 2 === 0 ? "var(--green)" : "var(--blue)" }}>{m.Year}</div>
+                    <div className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{m.Text}</div>
+                  </div>
+                ))
+              )}
             </div>
           </motion.div>
         </div>

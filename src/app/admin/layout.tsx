@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, FileText, Settings, LogOut, Users, BarChart3, Briefcase, Award, Lightbulb, MessageSquare, Layout, Bot } from "lucide-react";
+import { LayoutDashboard, FileText, Settings, LogOut, Users, BarChart3, Briefcase, Award, Lightbulb, MessageSquare, Layout, Bot, Calendar } from "lucide-react";
 
 export default function AdminLayout({
   children,
@@ -50,6 +50,7 @@ export default function AdminLayout({
           <div className="mt-8 mb-2 px-4">
             <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-semibold">Content</p>
           </div>
+          <SidebarLink href="/admin/timeline" icon={<Calendar size={20} />} label="Company Timeline" active={pathname.startsWith("/admin/timeline")} />
           <SidebarLink href="/admin/blog" icon={<FileText size={20} />} label="Manage Blogs" active={pathname.startsWith("/admin/blog")} />
           <SidebarLink href="/admin/projects" icon={<Briefcase size={20} />} label="Manage Projects" active={pathname.startsWith("/admin/projects")} />
           <SidebarLink href="/admin/expertise" icon={<Award size={20} />} label="Our Expertise" active={pathname.startsWith("/admin/expertise")} />
@@ -61,6 +62,7 @@ export default function AdminLayout({
           <SidebarLink href="/admin/solutions" icon={<Briefcase size={20} />} label="System Solutions" active={pathname.startsWith("/admin/solutions")} />
           <SidebarLink href="/admin/customers" icon={<Users size={20} />} label="Manage Customers" active={pathname.startsWith("/admin/customers")} />
           <SidebarLink href="/admin/careers" icon={<Briefcase size={20} />} label="Manage Careers" active={pathname.startsWith("/admin/careers")} />
+          <SidebarLink href="/admin/job-applications" icon={<Users size={20} />} label="Job Applications" active={pathname.startsWith("/admin/job-applications")} />
           
           <div className="mt-8 mb-2 px-4">
             <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-semibold">System</p>
