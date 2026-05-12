@@ -143,9 +143,12 @@ export default function ProjectManagement() {
                         <Link href="/projects" target="_blank" className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--blue)]">
                           <ExternalLink size={16} />
                         </Link>
-                        <button className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]">
+                        <Link 
+                          href={`/admin/projects/edit/${p.id}`}
+                          className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-[var(--green)]"
+                        >
                           <Edit2 size={16} />
-                        </button>
+                        </Link>
                         <button 
                           onClick={() => handleDelete(p.id)}
                           className="p-2 rounded-lg hover:bg-[var(--bg-elevated)] transition-smooth text-[var(--text-muted)] hover:text-red-400"

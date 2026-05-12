@@ -41,3 +41,30 @@ export async function GET(
     return NextResponse.json({ message: "Failed to fetch project", error: error.message }, { status: 500 });
   }
 }
+
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = params.id;
+    const data = await request.json();
+    const { title, clientName, categoryId, description, imageUrl, status } = data;
+
+    const pool = await getDbConnection();
+    await pool.request()
+      .input('ProjectId', sql.Int, parseInt(id))
+      .input('Title', sql.NVarChar(255), title)
+      .input('ClientName', sql.NVarChar(100), clientName)
+      .input('CategoryId', sql.Int, parseInt(categoryId))
+      .input('Description', sql.NVarChar(sql.MAX), description)
+      .input('ImageUrl', sql.NVarChar(sql.MAX), imageUrl)
+      .input('Status', sql.NVarChar(20), status)
+      .execute('sp_UpdateProject');
+
+    return NextResponse.json({ message: "Project updated successfully" });
+  } catch (error: any) {
+    console.error("Error updating project:", error);
+    return NextResponse.json({ message: "Failed to update project", error: error.message }, { status: 500 });
+  }
+}

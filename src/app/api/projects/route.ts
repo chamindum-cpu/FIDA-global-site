@@ -27,9 +27,17 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+    console.log("POST /api/projects Data:", data);
     const { title, clientName, categoryId, description, imageUrl, status } = data;
-    const pool = await getDbConnection();
+    
+    if (!title || !categoryId) {
+      console.error("Missing required fields:", { title, categoryId });
+      return NextResponse.json({ message: "Title and Category are required" }, { status: 400 });
+    }
 
+    const pool = await getDbConnection();
+    console.log("Executing sp_CreateProject...");
+    
     const result = await pool.request()
       .input('Title', sql.NVarChar(255), title)
       .input('ClientName', sql.NVarChar(100), clientName)
@@ -39,8 +47,16 @@ export async function POST(request: Request) {
       .input('Status', sql.NVarChar(20), status || 'Published')
       .execute('sp_CreateProject');
 
+    console.log("sp_CreateProject Result:", result.recordset);
+
+    if (!result.recordset || result.recordset.length === 0) {
+       console.error("No recordset returned from sp_CreateProject");
+       return NextResponse.json({ message: "Failed to retrieve new project ID" }, { status: 500 });
+    }
+
     return NextResponse.json({ message: "Project created", projectId: result.recordset[0].ProjectId });
   } catch (error: any) {
+    console.error("POST /api/projects Error:", error);
     return NextResponse.json({ message: "Failed to create project", error: error.message }, { status: 500 });
   }
 }
