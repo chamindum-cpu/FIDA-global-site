@@ -365,10 +365,10 @@ export default function PageLoader({ isLoading }: PageLoaderProps) {
                   const inner = RING_R - 6, outer = RING_R + 6;
                   return (
                     <line key={i}
-                      x1={112 + Math.cos(ang) * inner}
-                      y1={112 + Math.sin(ang) * inner}
-                      x2={112 + Math.cos(ang) * outer}
-                      y2={112 + Math.sin(ang) * outer}
+                      x1={(112 + Math.cos(ang) * inner).toFixed(4)}
+                      y1={(112 + Math.sin(ang) * inner).toFixed(4)}
+                      x2={(112 + Math.cos(ang) * outer).toFixed(4)}
+                      y2={(112 + Math.sin(ang) * outer).toFixed(4)}
                       stroke={i % 3 === 0 ? "rgba(118,196,66,0.45)" : "rgba(56,163,245,0.2)"}
                       strokeWidth={i % 3 === 0 ? 1 : 0.5}
                     />

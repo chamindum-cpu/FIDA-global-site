@@ -342,8 +342,8 @@ export default function Hero() {
             {[
               { label: "500+", sub: "Clients" },
               { label: "12", sub: "Countries" },
-              { label: "15+", sub: "Awards" },
-              { label: "99.9%", sub: "Uptime SLA" },
+              { label: "14+", sub: "experience(Years)" },
+              { label: "50K+", sub: "Uptime Cloud Payroll Employees" },
             ].map((s) => (
               <div key={s.label} className="text-left group cursor-default">
                 <div className="text-lg font-black text-white group-hover:text-primary transition-colors">
