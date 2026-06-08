@@ -34,9 +34,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # NOTE: Please change '/path/to/your/project' to the actual path on your Linux server 
+            # NOTE: Please change 'cd /var/www/fida-web' to the actual path on your Linux server 
             # where the docker-compose.yml file is located.
-            cd /path/to/your/project
+            cd /var/www/fida-web
             
             # Pull the latest image from Docker Hub
             docker pull ${{ secrets.DOCKER_USERNAME }}/fida-web:latest
