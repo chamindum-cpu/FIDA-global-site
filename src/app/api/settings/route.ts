@@ -4,7 +4,7 @@ import { getDbConnection, sql } from "@/lib/db";
 export async function GET() {
   try {
     const pool = await getDbConnection();
-    const result = await pool.request().query("SELECT setting_key, setting_value FROM site_settings");
+    const result = await pool.request().execute("sp_GetAllSiteSettings");
     
     const settings: { [key: string]: string } = {};
     result.recordset.forEach(row => {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     await pool.request()
       .input('key', sql.NVarChar(100), key)
       .input('value', sql.NVarChar(sql.MAX), value)
-      .query("UPDATE site_settings SET setting_value = @value, updated_at = GETDATE() WHERE setting_key = @key");
+      .execute("sp_UpdateSiteSetting");
 
     return NextResponse.json({ message: "Setting updated successfully" });
   } catch (error: any) {

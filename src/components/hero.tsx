@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import SeasonalDecor from "./seasonal-decor";
 
@@ -206,6 +206,26 @@ function Globe() {
 /* ─── Hero ────────────────────────────────────────────────── */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [stats, setStats] = useState({
+    clients_count: "500",
+    countries_count: "12",
+    experience_years: "14",
+  });
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setStats({
+            clients_count: data.clients_count || "500",
+            countries_count: data.countries_count || "12",
+            experience_years: data.experience_years || "14",
+          });
+        }
+      })
+      .catch(err => console.error("Error fetching stats:", err));
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -340,9 +360,9 @@ export default function Hero() {
             className="flex flex-wrap items-center gap-x-8 gap-y-4 pt-6 border-t border-white/5 w-full"
           >
             {[
-              { label: "500+", sub: "Clients" },
-              { label: "12", sub: "Countries" },
-              { label: "14+", sub: "experience(Years)" },
+              { label: `${stats.clients_count}+`, sub: "Clients" },
+              { label: stats.countries_count, sub: "Countries" },
+              { label: `${stats.experience_years}+`, sub: "experience(Years)" },
               { label: "50K+", sub: "Uptime Cloud Payroll Employees" },
             ].map((s) => (
               <div key={s.label} className="text-left group cursor-default">
@@ -398,10 +418,10 @@ export default function Hero() {
             className="absolute -left-8 bottom-16 glass border border-white/10 rounded-2xl px-4 py-3 text-xs"
           >
             <div className="text-muted uppercase tracking-widest text-[9px] mb-1">Active Clients</div>
-            <div className="text-white font-black text-lg leading-none">500<span className="text-primary">+</span></div>
+            <div className="text-white font-black text-lg leading-none">{stats.clients_count}<span className="text-primary">+</span></div>
             <div className="text-[9px] text-primary mt-1 flex items-center gap-1">
               <span className="w-1 h-1 rounded-full bg-primary inline-block animate-pulse" />
-              12 countries
+              {stats.countries_count} countries
             </div>
           </motion.div>
 

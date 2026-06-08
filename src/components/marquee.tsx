@@ -4,8 +4,7 @@ import { useRef } from "react";
 
 const items = [
   "IT Consultancy", "Cloud Solutions", "Cybersecurity", "HR Automation",
-  "Infrastructure", "Managed Services", "Digital Transformation", "AI Integration",
-  "Networking", "Data Analytics", "DevOps", "ERP Systems",
+  "Infrastructure", "Managed Services", "Digital Transformation", "AI Integration"
 ];
 
 export default function MarqueeTicker() {

@@ -106,10 +106,72 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Placeholder for other settings */}
-        <section className="glass rounded-[2.5rem] p-10 border border-white/10 opacity-50 pointer-events-none">
-           <h3 className="text-xl font-bold text-white mb-4">Other Preferences</h3>
-           <p className="text-sm text-[var(--text-secondary)]">Coming soon: Maintenance Mode, Newsletter Config, etc.</p>
+        {/* Site Stats Card */}
+        <section className="glass rounded-[2.5rem] p-10 border border-white/10 space-y-8">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-400">
+              <Settings size={24} />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white">Company Statistics</h3>
+              <p className="text-sm text-[var(--text-secondary)]">Update the numbers displayed on the frontend.</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-white mb-1">Company Count (Clients)</label>
+              <input 
+                type="text" 
+                value={settings.clients_count || ""} 
+                onChange={(e) => setSettings({ ...settings, clients_count: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-green-500 transition-colors"
+                placeholder="e.g. 500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white mb-1">Experience (Years)</label>
+              <input 
+                type="text" 
+                value={settings.experience_years || ""} 
+                onChange={(e) => setSettings({ ...settings, experience_years: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-green-500 transition-colors"
+                placeholder="e.g. 14"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white mb-1">Countries Count</label>
+              <input 
+                type="text" 
+                value={settings.countries_count || ""} 
+                onChange={(e) => setSettings({ ...settings, countries_count: e.target.value })}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-green-500 transition-colors"
+                placeholder="e.g. 12"
+              />
+            </div>
+            <button
+              onClick={async () => {
+                setSaving(true);
+                try {
+                  await Promise.all([
+                    fetch("/api/settings", { method: "POST", body: JSON.stringify({ key: "clients_count", value: settings.clients_count || "500" }), headers: { "Content-Type": "application/json" } }),
+                    fetch("/api/settings", { method: "POST", body: JSON.stringify({ key: "experience_years", value: settings.experience_years || "14" }), headers: { "Content-Type": "application/json" } }),
+                    fetch("/api/settings", { method: "POST", body: JSON.stringify({ key: "countries_count", value: settings.countries_count || "12" }), headers: { "Content-Type": "application/json" } })
+                  ]);
+                  alert("Statistics updated successfully!");
+                } catch (err) {
+                  alert("Error updating statistics");
+                } finally {
+                  setSaving(false);
+                }
+              }}
+              disabled={saving}
+              className="w-full mt-4 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-bold transition-all disabled:opacity-50"
+            >
+              {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+              Save Statistics
+            </button>
+          </div>
         </section>
       </div>
     </div>

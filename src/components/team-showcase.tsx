@@ -91,11 +91,18 @@ export default function TeamShowcase() {
           className="absolute inset-0"
           style={{ zIndex: 1 }}
         >
+          {/* Blurred Background to fill space */}
           <img
             src={member.image}
             alt={member.name}
-            className="w-full h-full object-cover object-top"
-            style={{ filter: "brightness(0.45) saturate(0.9)" }}
+            className="absolute inset-0 w-full h-full object-cover object-center blur-3xl opacity-40"
+          />
+          {/* Main Image fitting the screen */}
+          <img
+            src={member.image}
+            alt={member.name}
+            className="absolute inset-0 w-full h-full object-contain object-center"
+            style={{ filter: "brightness(0.6) saturate(0.9)" }}
           />
         </motion.div>
       </AnimatePresence>
@@ -392,7 +399,7 @@ export default function TeamShowcase() {
             <img
               src={m.image}
               alt={m.name}
-              className="w-full h-full object-cover object-top"
+              className="w-full h-full object-cover object-center"
               style={{ filter: i === active ? "brightness(1)" : "brightness(0.5)" }}
             />
           </button>

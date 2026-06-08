@@ -1,16 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AnimatedCounter } from "./animated-counter";
 
-const stats = [
-  { value: 360, suffix: "+", prefix: "", label: "Total Projects", desc: "Successfully delivered" },
-  { value: 13, suffix: "+", prefix: "", label: "Years Exp.", desc: "Innovation & R&D" },
-  { value: 28862, suffix: "+", prefix: "", label: "Cloud Users", desc: "On FIDA HR Platform" },
-  { value: 45, suffix: "+", prefix: "", label: "Happy Clients", desc: "Global Enterprises" },
-];
-
 export default function StatsSection() {
+  const [stats, setStats] = useState([
+    { value: 360, suffix: "+", prefix: "", label: "Total Projects", desc: "Successfully delivered" },
+    { value: 13, suffix: "+", prefix: "", label: "Years Exp.", desc: "Innovation & R&D" },
+    { value: 28862, suffix: "+", prefix: "", label: "Cloud Users", desc: "On FIDA HR Platform" },
+    { value: 45, suffix: "+", prefix: "", label: "Happy Clients", desc: "Global Enterprises" },
+  ]);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setStats([
+            { value: 360, suffix: "+", prefix: "", label: "Total Projects", desc: "Successfully delivered" },
+            { value: parseInt(data.experience_years) || 13, suffix: "+", prefix: "", label: "Years Exp.", desc: "Innovation & R&D" },
+            { value: 28862, suffix: "+", prefix: "", label: "Cloud Users", desc: "On FIDA HR Platform" },
+            { value: parseInt(data.clients_count) || 45, suffix: "+", prefix: "", label: "Happy Clients", desc: "Global Enterprises" },
+          ]);
+        }
+      })
+      .catch(err => console.error("Error fetching stats:", err));
+  }, []);
+
   return (
     <section className="py-24 relative overflow-hidden bg-zinc-50">
       {/* Background line */}

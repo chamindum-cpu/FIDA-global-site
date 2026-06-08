@@ -29,9 +29,11 @@ export default function AboutClient() {
 
   const [milestones, setMilestones] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
     fetchTimeline();
+    fetchSettings();
   }, []);
 
   const fetchTimeline = async () => {
@@ -49,15 +51,25 @@ export default function AboutClient() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch("/api/settings");
+      const data = await res.json();
+      setSettings(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       {/* Stats */}
       <section className="section-alt py-20">
         <div className="container mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-[var(--grey-dark)]">
           {[
-            { val: 500, suf: "+", label: "Enterprise Clients", color: "var(--green)" },
-            { val: 15, suf: "+", label: "Industry Awards", color: "var(--blue)" },
-            { val: 12, suf: "", label: "Countries", color: "var(--grey-light)" },
+            { val: parseInt(settings?.clients_count || "500"), suf: "+", label: "Enterprise Clients", color: "var(--green)" },
+            { val: parseInt(settings?.experience_years || "15"), suf: "+", label: "Years Experience", color: "var(--blue)" },
+            { val: parseInt(settings?.countries_count || "12"), suf: "", label: "Countries", color: "var(--grey-light)" },
             { val: 99, suf: ".9%", label: "Uptime SLA", color: "var(--green)" },
           ].map((s, i) => (
             <motion.div

@@ -20,7 +20,6 @@ const navGroups = [
     links: [
       { name: "IT Consultancy", href: "/services/consultancy" },
       { name: "Infrastructure", href: "/services/infrastructure" },
-      { name: "Networking", href: "/services/networking" },
       { name: "Managed Services", href: "/services/managed" },
     ],
   },
