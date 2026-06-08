@@ -38,24 +38,24 @@ jobs:
 
       - name: Deploy to Linux Server
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          envs: ENV_FILE_CONTENT
           script: |
-            # NOTE: Please change 'cd /var/www/fida-web' to the actual path on your Linux server 
-            # where the docker-compose.yml file is located.
             cd /var/www/fida-web
+            
+            # Automatically create the .env file from the GitHub Secret
+            echo "$ENV_FILE_CONTENT" > .env
             
             # Pull the latest image from Docker Hub
             docker pull ${{ secrets.DOCKER_USERNAME }}/fida-web:latest
             
             # Stop the old container
             docker-compose down
-            
-            # Create a .env file on the server if needed, or pass variables through docker-compose
-            # Update the image in docker-compose.yml if you're pulling from a registry
-            # Make sure docker-compose.yml on the server has image: ${{ secrets.DOCKER_USERNAME }}/fida-web:latest
             
             # Start the new container
             docker-compose up -d
