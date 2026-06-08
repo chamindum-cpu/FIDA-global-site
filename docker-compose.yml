@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   fida-web:
-    image: fida-web:latest # This will be replaced by the CI/CD pipeline if using a registry
+    image: chamindujanmor/fida-web:latest
     container_name: fida-web
     restart: always
     ports:
