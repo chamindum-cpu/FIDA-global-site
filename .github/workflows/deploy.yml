@@ -55,10 +55,10 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/fida-web:latest
             
             # Stop the old container
-            docker-compose down
+            docker compose down
             
             # Start the new container
-            docker-compose up -d
+            docker compose up -d
             
             # Clean up old unused images to free up disk space
             docker image prune -f
